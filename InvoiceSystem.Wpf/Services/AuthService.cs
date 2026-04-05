@@ -54,6 +54,46 @@ public class AuthService
         throw new Exception("ログインに失敗しました。時間をおいて再度お試しください。");
     }
 
+    public async Task ForgotPasswordAsync(ForgotPasswordRequest request)
+    {
+        using var response = await _httpClient.PostAsJsonAsync("/auth/forgot-password", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        string? message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "メール送信に失敗しました。メールアドレスをご確認ください。");
+        }
+
+        throw new Exception("再設定メールの送信に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task ResetPasswordAsync(ResetPasswordRequest request)
+    {
+        using var response = await _httpClient.PostAsJsonAsync("/auth/reset-password", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        string? message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "パスワードの再設定に失敗しました。");
+        }
+
+        throw new Exception("パスワードの再設定に失敗しました。時間をおいて再度お試しください。");
+    }
+
     private static string? TryReadMessage(string json)
     {
         if (string.IsNullOrWhiteSpace(json))

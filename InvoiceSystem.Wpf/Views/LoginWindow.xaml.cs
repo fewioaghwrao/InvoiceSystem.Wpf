@@ -12,6 +12,7 @@ namespace InvoiceSystem.Wpf.Views;
 public partial class LoginWindow : Window
 {
     private readonly LoginViewModel _viewModel;
+    private readonly AuthService _authService;
     private bool _isPasswordVisible;
 
     public LoginWindow()
@@ -31,8 +32,9 @@ public partial class LoginWindow : Window
             BaseAddress = new Uri(apiSettings.BaseUrl)
         };
 
-        var authService = new AuthService(httpClient);
-        _viewModel = new LoginViewModel(authService);
+
+        _authService = new AuthService(httpClient);
+        _viewModel = new LoginViewModel(_authService);
         _viewModel.LoginSucceeded += OnLoginSucceeded;
 
         DataContext = _viewModel;
@@ -77,17 +79,27 @@ public partial class LoginWindow : Window
         }
     }
 
-    private void OnLoginSucceeded(string role)
+    private void ForgotPasswordButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            $"ログイン成功\nロール: {role}\nユーザー: {_viewModel.CurrentUser?.Name}",
-            "成功",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new ForgotPasswordWindow(_authService)
+        {
+            Owner = this
+        };
 
-        // 本命実装ではポップアップなしで画面遷移がおすすめ
-        // if (role == "Admin") new AdminDashboardWindow().Show();
-        // else new MemberDashboardWindow().Show();
-        // Close();
+        window.ShowDialog();
     }
+
+     private void OnLoginSucceeded(string role)
+{
+    MessageBox.Show(
+        $"ログイン成功\nロール: {role}\nユーザー: {_viewModel.CurrentUser?.Name}",
+        "成功",
+        MessageBoxButton.OK,
+        MessageBoxImage.Information);
+
+    // 本命実装ではポップアップなしで画面遷移がおすすめ
+    // if (role == "Admin") new AdminDashboardWindow().Show();
+    // else new MemberDashboardWindow().Show();
+    // Close();
 }
+ }
