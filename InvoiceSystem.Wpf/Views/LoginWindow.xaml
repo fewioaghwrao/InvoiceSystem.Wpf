@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="ログイン"
-         Height="560"
+         Height="620"
         Width="620"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -87,6 +87,8 @@
                         <RowDefinition Height="14"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="12"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
@@ -241,6 +243,17 @@
         FontWeight="SemiBold"
         Cursor="Hand"
         Click="ForgotPasswordButton_OnClick"/>
+
+                    <Button Grid.Row="14"
+        Content="新規会員登録はこちら"
+        HorizontalAlignment="Center"
+        Background="Transparent"
+        BorderThickness="0"
+        Foreground="#A5B4FC"
+        FontSize="12"
+        FontWeight="SemiBold"
+        Cursor="Hand"
+        Click="RegisterButton_OnClick"/>
 
                 </Grid>
             </Border>

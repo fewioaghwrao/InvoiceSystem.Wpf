@@ -114,4 +114,39 @@ public class AuthService
 
         return null;
     }
+
+
+    public async Task<(bool Success, string Message)> RegisterAsync(RegisterRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("/auth/register", new
+        {
+            name = request.Name,
+            email = request.Email,
+            password = request.Password,
+            postalCode = string.IsNullOrWhiteSpace(request.PostalCode) ? null : request.PostalCode,
+            address = string.IsNullOrWhiteSpace(request.Address) ? null : request.Address,
+            phone = string.IsNullOrWhiteSpace(request.Phone) ? null : request.Phone
+        });
+
+        if (response.IsSuccessStatusCode)
+        {
+            return (true, "登録が完了しました。ログイン画面からサインインしてください。");
+        }
+
+        var body = await response.Content.ReadAsStringAsync();
+
+        try
+        {
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.TryGetProperty("message", out var msg))
+            {
+                return (false, msg.GetString() ?? "登録に失敗しました。");
+            }
+        }
+        catch
+        {
+        }
+
+        return (false, "登録に失敗しました。");
+    }
 }

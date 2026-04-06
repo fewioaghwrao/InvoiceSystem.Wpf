@@ -102,4 +102,14 @@ public partial class LoginWindow : Window
     // else new MemberDashboardWindow().Show();
     // Close();
 }
- }
+
+    private void RegisterButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var window = new RegisterWindow(_authService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
+    }
+}
