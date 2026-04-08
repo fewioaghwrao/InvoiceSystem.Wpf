@@ -6,6 +6,7 @@ using System;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
+using InvoiceSystem.Wpf.Views;
 
 namespace InvoiceSystem.Wpf.Views;
 
@@ -89,19 +90,25 @@ public partial class LoginWindow : Window
         window.ShowDialog();
     }
 
-     private void OnLoginSucceeded(string role)
-{
-    MessageBox.Show(
-        $"ログイン成功\nロール: {role}\nユーザー: {_viewModel.CurrentUser?.Name}",
-        "成功",
-        MessageBoxButton.OK,
-        MessageBoxImage.Information);
+    private void OnLoginSucceeded(string role)
+    {
+        var normalizedRole = (role ?? string.Empty).Trim().ToUpperInvariant();
 
-    // 本命実装ではポップアップなしで画面遷移がおすすめ
-    // if (role == "Admin") new AdminDashboardWindow().Show();
-    // else new MemberDashboardWindow().Show();
-    // Close();
-}
+        if (normalizedRole == "ADMIN")
+        {
+            MessageBox.Show(
+                "管理者ダッシュボードは簡易対応予定です。",
+                "管理者ログイン",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var memberWindow = new MemberDashboardWindow(_viewModel.CurrentUser, _authService);
+        memberWindow.Show();
+        Close();
+    }
 
     private void RegisterButton_OnClick(object sender, RoutedEventArgs e)
     {
