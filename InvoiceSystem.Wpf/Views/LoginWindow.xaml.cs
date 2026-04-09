@@ -6,7 +6,6 @@ using System;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
-using InvoiceSystem.Wpf.Views;
 
 namespace InvoiceSystem.Wpf.Views;
 
@@ -14,6 +13,7 @@ public partial class LoginWindow : Window
 {
     private readonly LoginViewModel _viewModel;
     private readonly AuthService _authService;
+    private readonly InvoiceService _invoiceService;
     private bool _isPasswordVisible;
 
     public LoginWindow()
@@ -33,8 +33,9 @@ public partial class LoginWindow : Window
             BaseAddress = new Uri(apiSettings.BaseUrl)
         };
 
-
         _authService = new AuthService(httpClient);
+        _invoiceService = new InvoiceService(httpClient);
+
         _viewModel = new LoginViewModel(_authService);
         _viewModel.LoginSucceeded += OnLoginSucceeded;
 
@@ -105,7 +106,11 @@ public partial class LoginWindow : Window
             return;
         }
 
-        var memberWindow = new MemberDashboardWindow(_viewModel.CurrentUser, _authService);
+        var memberWindow = new MemberDashboardWindow(
+            _viewModel.CurrentUser,
+            _authService,
+            _invoiceService);
+
         memberWindow.Show();
         Close();
     }

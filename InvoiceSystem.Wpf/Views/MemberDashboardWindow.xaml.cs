@@ -9,13 +9,18 @@ public partial class MemberDashboardWindow : Window
 {
     private readonly object? _currentUser;
     private readonly AuthService _authService;
+    private readonly InvoiceService _invoiceService;
 
-    public MemberDashboardWindow(object? currentUser, AuthService authService)
+    public MemberDashboardWindow(
+        object? currentUser,
+        AuthService authService,
+        InvoiceService invoiceService)
     {
         InitializeComponent();
 
         _currentUser = currentUser;
         _authService = authService;
+        _invoiceService = invoiceService;
 
         LoadCurrentUser();
     }
@@ -71,11 +76,9 @@ public partial class MemberDashboardWindow : Window
 
     private void InvoicesButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "請求書一覧画面へ遷移する想定です。\n\n次段階で InvoiceListWindow などへ差し替えできます。",
-            "請求書一覧",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var invoiceListWindow = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService);
+        invoiceListWindow.Show();
+        Close();
     }
 
     private void UnpaidButton_OnClick(object sender, RoutedEventArgs e)
@@ -123,8 +126,7 @@ public partial class MemberDashboardWindow : Window
         if (result != MessageBoxResult.Yes)
             return;
 
-        // 将来的に _authService 経由のログアウトAPIがあればここで呼ぶ
-        // await _authService.LogoutAsync();
+        _authService.Logout();
 
         var loginWindow = new LoginWindow();
         loginWindow.Show();

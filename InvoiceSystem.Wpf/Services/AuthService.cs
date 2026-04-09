@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,6 +30,12 @@ public class AuthService
                 throw new Exception("ログイン応答の解析に失敗しました。");
             }
 
+            if (!string.IsNullOrWhiteSpace(result.Token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", result.Token);
+            }
+
             return result;
         }
 
@@ -52,6 +59,32 @@ public class AuthService
         }
 
         throw new Exception("ログインに失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public void Logout()
+    {
+        _httpClient.DefaultRequestHeaders.Authorization = null;
+    }
+
+    private static string? TryReadMessage(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("message", out var messageElement))
+            {
+                return messageElement.GetString();
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return null;
     }
 
     public async Task ForgotPasswordAsync(ForgotPasswordRequest request)
@@ -93,28 +126,6 @@ public class AuthService
 
         throw new Exception("パスワードの再設定に失敗しました。時間をおいて再度お試しください。");
     }
-
-    private static string? TryReadMessage(string json)
-    {
-        if (string.IsNullOrWhiteSpace(json))
-            return null;
-
-        try
-        {
-            using var doc = JsonDocument.Parse(json);
-            if (doc.RootElement.TryGetProperty("message", out var messageElement))
-            {
-                return messageElement.GetString();
-            }
-        }
-        catch
-        {
-            // ignore
-        }
-
-        return null;
-    }
-
 
     public async Task<(bool Success, string Message)> RegisterAsync(RegisterRequest request)
     {
