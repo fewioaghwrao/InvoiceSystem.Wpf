@@ -306,10 +306,6 @@
                                     </StackPanel>
                                 </Grid>
                             </Border>
-
-                            <TextBlock Margin="0,16,0,0"
-                                       Text="※ 画面遷移は今後本実装に差し替え可能です。"
-                                       Style="{StaticResource MutedTextStyle}"/>
                         </StackPanel>
                     </Border>
 

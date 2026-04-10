@@ -17,6 +17,7 @@ public partial class MemberInvoiceListWindow : Window
     private readonly object? _currentUser;
     private readonly AuthService _authService;
     private readonly InvoiceService _invoiceService;
+    private readonly AccountService _accountService;
 
     private const int DefaultPageSize = 10;
 
@@ -29,7 +30,7 @@ public partial class MemberInvoiceListWindow : Window
 
     public ObservableCollection<MemberInvoiceRowViewModel> InvoiceRows { get; } = new();
 
-    public MemberInvoiceListWindow(object? currentUser, AuthService authService, InvoiceService invoiceService)
+    public MemberInvoiceListWindow(object? currentUser, AuthService authService, InvoiceService invoiceService, AccountService accountService)
     {
         InitializeComponent();
         DataContext = this;
@@ -44,6 +45,7 @@ public partial class MemberInvoiceListWindow : Window
         InitializeFilters();
 
         Loaded += MemberInvoiceListWindow_Loaded;
+        _accountService = accountService;
     }
 
     private async void MemberInvoiceListWindow_Loaded(object sender, RoutedEventArgs e)
@@ -139,7 +141,7 @@ public partial class MemberInvoiceListWindow : Window
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
-        var dashboard = new MemberDashboardWindow(_currentUser, _authService, _invoiceService);
+        var dashboard = new MemberDashboardWindow(_currentUser, _authService, _invoiceService, _accountService);
         dashboard.Show();
         Close();
     }
@@ -156,13 +158,14 @@ public partial class MemberInvoiceListWindow : Window
             row.Id,
             _currentUser,
             _authService,
-            _invoiceService);
+            _invoiceService,
+            _accountService);
 
         detailWindow.Show();
         Close();
     }
 
-    private void PdfButton_Click(object sender, RoutedEventArgs e)
+    private async void PdfButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button button)
             return;
@@ -170,32 +173,36 @@ public partial class MemberInvoiceListWindow : Window
         if (button.DataContext is not MemberInvoiceRowViewModel row)
             return;
 
-        if (string.IsNullOrWhiteSpace(row.PdfUrl))
-        {
-            MessageBox.Show(
-                "PDFのURLまたはパスがまだ設定されていません。\n\n" +
-                "DTOに PdfUrl または PdfPath を追加すると、このボタンから直接開けます。",
-                "PDF表示",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-            return;
-        }
-
         try
         {
+            ToggleLoading(true);
+
+            var pdf = await _invoiceService.GetMemberInvoicePdfAsync(row.Id);
+
+            if (!string.Equals(pdf.ContentType, "application/pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new Exception("PDF形式ではないレスポンスを受信しました。");
+            }
+
+            var filePath = InvoiceService.SavePdfToTempFile(pdf);
+
             Process.Start(new ProcessStartInfo
             {
-                FileName = row.PdfUrl,
+                FileName = filePath,
                 UseShellExecute = true
             });
         }
         catch (Exception ex)
         {
             MessageBox.Show(
-                $"PDFを開けませんでした。\n{ex.Message}",
+                $"PDFを開けませんでした。\n\n{ex.Message}",
                 "PDF表示エラー",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
+        }
+        finally
+        {
+            ToggleLoading(false);
         }
     }
 

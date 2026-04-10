@@ -10,17 +10,20 @@ public partial class MemberDashboardWindow : Window
     private readonly object? _currentUser;
     private readonly AuthService _authService;
     private readonly InvoiceService _invoiceService;
+    private readonly AccountService _accountService;
 
     public MemberDashboardWindow(
         object? currentUser,
         AuthService authService,
-        InvoiceService invoiceService)
+    InvoiceService invoiceService,
+    AccountService accountService)
     {
         InitializeComponent();
 
         _currentUser = currentUser;
         _authService = authService;
         _invoiceService = invoiceService;
+        _accountService = accountService;
 
         LoadCurrentUser();
     }
@@ -76,27 +79,23 @@ public partial class MemberDashboardWindow : Window
 
     private void InvoicesButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var invoiceListWindow = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService);
+        var invoiceListWindow = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService, _accountService);
         invoiceListWindow.Show();
         Close();
     }
 
     private void UnpaidButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "未入金確認画面へ遷移する想定です。\n\n次段階で UnpaidInvoicesWindow などへ差し替えできます。",
-            "未入金確認",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new MemberPaymentStatusWindow(_currentUser, _authService, _invoiceService,_accountService);
+        window.Show();
+        Close();
     }
 
     private void ProfileButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "登録情報確認画面へ遷移する想定です。\n\n次段階で ProfileWindow などへ差し替えできます。",
-            "登録情報確認",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new MemberProfileWindow(_currentUser, _authService, _invoiceService, _accountService);
+        window.Show();
+        Close();
     }
 
     private void BackToLoginButton_OnClick(object sender, RoutedEventArgs e)

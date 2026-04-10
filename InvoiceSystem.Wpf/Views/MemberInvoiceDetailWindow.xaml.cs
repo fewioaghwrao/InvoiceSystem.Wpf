@@ -15,14 +15,14 @@ public partial class MemberInvoiceDetailWindow : Window
     private readonly object? _currentUser;
     private readonly AuthService _authService;
     private readonly InvoiceService _invoiceService;
-
-    private string? _pdfUrl;
+    private readonly AccountService _AccountService;
 
     public MemberInvoiceDetailWindow(
         long invoiceId,
         object? currentUser,
         AuthService authService,
-        InvoiceService invoiceService)
+        InvoiceService invoiceService,
+        AccountService accountService)
     {
         InitializeComponent();
 
@@ -32,6 +32,7 @@ public partial class MemberInvoiceDetailWindow : Window
         _invoiceService = invoiceService;
 
         Loaded += MemberInvoiceDetailWindow_Loaded;
+        _AccountService = accountService;
     }
 
     private async void MemberInvoiceDetailWindow_Loaded(object sender, RoutedEventArgs e)
@@ -52,6 +53,7 @@ public partial class MemberInvoiceDetailWindow : Window
         catch (Exception ex)
         {
             ErrorText.Text = ex.Message;
+            PdfButton.IsEnabled = false;
 
             MessageBox.Show(
                 $"請求書詳細の取得に失敗しました。\n\n{ex.Message}",
@@ -76,10 +78,6 @@ public partial class MemberInvoiceDetailWindow : Window
         RemainingAmountText.Text = FormatMoney(detail.RemainingAmount);
         RemarksText.Text = string.IsNullOrWhiteSpace(detail.Remarks) ? "備考はありません。" : detail.Remarks;
 
-        _pdfUrl = !string.IsNullOrWhiteSpace(detail.PdfUrl)
-            ? detail.PdfUrl
-            : detail.PdfPath;
-
         var isOverdue =
             detail.DueDate.Date < DateTime.Today &&
             detail.RemainingAmount > 0;
@@ -87,7 +85,9 @@ public partial class MemberInvoiceDetailWindow : Window
         OverdueBadge.Visibility = isOverdue ? Visibility.Visible : Visibility.Collapsed;
 
         ApplyStatusStyle(detail.StatusName);
-        PdfButton.IsEnabled = !string.IsNullOrWhiteSpace(_pdfUrl);
+
+        // PDF URL 依存ではなく、詳細が読めたらPDF取得可能とみなす
+        PdfButton.IsEnabled = true;
     }
 
     private void ApplyStatusStyle(string statusName)
@@ -123,38 +123,50 @@ public partial class MemberInvoiceDetailWindow : Window
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
-        var window = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService);
+        var window = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService, _AccountService);
         window.Show();
         Close();
     }
 
-    private void PdfButton_Click(object sender, RoutedEventArgs e)
+    private async void PdfButton_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(_pdfUrl))
-        {
-            MessageBox.Show(
-                "PDFのURLまたはパスが設定されていません。",
-                "PDF表示",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-            return;
-        }
-
         try
         {
+            PdfButton.IsEnabled = false;
+            LoadingText.Text = "PDFを取得しています...";
+            LoadingText.Visibility = Visibility.Visible;
+            ErrorText.Text = string.Empty;
+
+            var pdf = await _invoiceService.GetMemberInvoicePdfAsync(_invoiceId);
+
+            if (!string.Equals(pdf.ContentType, "application/pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new Exception("PDF形式ではないレスポンスを受信しました。");
+            }
+
+            var filePath = InvoiceService.SavePdfToTempFile(pdf);
+
             Process.Start(new ProcessStartInfo
             {
-                FileName = _pdfUrl,
+                FileName = filePath,
                 UseShellExecute = true
             });
         }
         catch (Exception ex)
         {
+            ErrorText.Text = ex.Message;
+
             MessageBox.Show(
-                $"PDFを開けませんでした。\n{ex.Message}",
+                $"PDFを開けませんでした。\n\n{ex.Message}",
                 "PDF表示エラー",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
+        }
+        finally
+        {
+            LoadingText.Text = string.Empty;
+            LoadingText.Visibility = Visibility.Collapsed;
+            PdfButton.IsEnabled = true;
         }
     }
 

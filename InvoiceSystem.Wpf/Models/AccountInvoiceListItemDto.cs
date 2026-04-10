@@ -20,17 +20,13 @@ public class AccountInvoiceListItemDto
     [JsonPropertyName("totalAmount")]
     public decimal TotalAmount { get; set; }
 
+    [JsonPropertyName("remainingAmount")]
+    public decimal RemainingAmount { get; set; }
+
     [JsonPropertyName("statusName")]
     public string StatusName { get; set; } = string.Empty;
 
     [JsonPropertyName("isOverdue")]
     public bool IsOverdue { get; set; }
 
-    // APIが返す場合に利用。返さなくても問題なし
-    [JsonPropertyName("pdfUrl")]
-    public string? PdfUrl { get; set; }
-
-    // APIがローカル/相対パス文字列を返す場合に利用。返さなくても問題なし
-    [JsonPropertyName("pdfPath")]
-    public string? PdfPath { get; set; }
 }
