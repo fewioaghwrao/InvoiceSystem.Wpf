@@ -12,6 +12,9 @@ namespace InvoiceSystem.Wpf.Views;
 public partial class LoginWindow : Window
 {
     private readonly LoginViewModel _viewModel;
+    private readonly AuthService _authService;
+    private readonly InvoiceService _invoiceService;
+    private readonly AccountService _accountService;
     private bool _isPasswordVisible;
 
     public LoginWindow()
@@ -31,8 +34,11 @@ public partial class LoginWindow : Window
             BaseAddress = new Uri(apiSettings.BaseUrl)
         };
 
-        var authService = new AuthService(httpClient);
-        _viewModel = new LoginViewModel(authService);
+        _authService = new AuthService(httpClient);
+        _invoiceService = new InvoiceService(httpClient);
+        _accountService = new AccountService(httpClient);
+
+        _viewModel = new LoginViewModel(_authService);
         _viewModel.LoginSucceeded += OnLoginSucceeded;
 
         DataContext = _viewModel;
@@ -77,17 +83,48 @@ public partial class LoginWindow : Window
         }
     }
 
+    private void ForgotPasswordButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var window = new ForgotPasswordWindow(_authService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
+    }
+
     private void OnLoginSucceeded(string role)
     {
-        MessageBox.Show(
-            $"ログイン成功\nロール: {role}\nユーザー: {_viewModel.CurrentUser?.Name}",
-            "成功",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var normalizedRole = (role ?? string.Empty).Trim().ToUpperInvariant();
 
-        // 本命実装ではポップアップなしで画面遷移がおすすめ
-        // if (role == "Admin") new AdminDashboardWindow().Show();
-        // else new MemberDashboardWindow().Show();
-        // Close();
+        if (normalizedRole == "ADMIN")
+        {
+            MessageBox.Show(
+                "管理者ダッシュボードは簡易対応予定です。",
+                "管理者ログイン",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var memberWindow = new MemberDashboardWindow(
+            _viewModel.CurrentUser,
+            _authService,
+            _invoiceService,
+            _accountService);
+
+        memberWindow.Show();
+        Close();
+    }
+
+    private void RegisterButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var window = new RegisterWindow(_authService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
     }
 }
