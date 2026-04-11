@@ -1,4 +1,5 @@
 ﻿using InvoiceSystem.Wpf.Configuration;
+using InvoiceSystem.Wpf.Models;
 using InvoiceSystem.Wpf.Services;
 using InvoiceSystem.Wpf.ViewModels;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ public partial class LoginWindow : Window
     private readonly AuthService _authService;
     private readonly InvoiceService _invoiceService;
     private readonly AccountService _accountService;
+    private readonly AdminService _adminService;
     private bool _isPasswordVisible;
 
     public LoginWindow()
@@ -37,6 +39,7 @@ public partial class LoginWindow : Window
         _authService = new AuthService(httpClient);
         _invoiceService = new InvoiceService(httpClient);
         _accountService = new AccountService(httpClient);
+        _adminService = new AdminService(httpClient);
 
         _viewModel = new LoginViewModel(_authService);
         _viewModel.LoginSucceeded += OnLoginSucceeded;
@@ -99,12 +102,15 @@ public partial class LoginWindow : Window
 
         if (normalizedRole == "ADMIN")
         {
-            MessageBox.Show(
-                "管理者ダッシュボードは簡易対応予定です。",
-                "管理者ログイン",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            var adminWindow = new AdminDashboardWindow(
+                _viewModel.CurrentUser,
+                _authService,
+                _invoiceService,
+                _accountService,
+                _adminService);
 
+            adminWindow.Show();
+            Close();
             return;
         }
 
