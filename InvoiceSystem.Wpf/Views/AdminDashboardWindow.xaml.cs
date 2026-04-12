@@ -9,13 +9,15 @@ public partial class AdminDashboardWindow : Window
 {
     private readonly AdminDashboardViewModel _viewModel;
     private readonly AuthService _authService;
+    private readonly MemberService _memberService;
 
     public AdminDashboardWindow(
         CurrentUser? currentUser,
         AuthService authService,
         InvoiceService invoiceService,
         AccountService accountService,
-        AdminService adminService)
+        AdminService adminService,
+        MemberService memberService)
     {
         InitializeComponent();
 
@@ -24,6 +26,7 @@ public partial class AdminDashboardWindow : Window
         DataContext = _viewModel;
 
         Loaded += AdminDashboardWindow_Loaded;
+        _memberService = memberService;
     }
 
     private async void AdminDashboardWindow_Loaded(object sender, RoutedEventArgs e)
@@ -84,11 +87,12 @@ public partial class AdminDashboardWindow : Window
 
     private void MembersButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "会員一覧画面への遷移は今後接続予定です。",
-            "案内",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new MemberListWindow(_memberService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
     }
 
     private void SalesButton_OnClick(object sender, RoutedEventArgs e)

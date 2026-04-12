@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using OxyPlot.Wpf;
 
 namespace InvoiceSystem.Wpf.ViewModels;
 
@@ -178,6 +179,8 @@ public class AdminDashboardViewModel : INotifyPropertyChanged
         }
     }
 
+    public IPlotController FixedPlotController { get; } = CreateFixedPlotController();
+
     public ObservableCollection<AdminUnpaidInvoiceDto> UnpaidInvoices { get; } = new();
     public ObservableCollection<AdminMonthlySalesItemViewModel> MonthlySales { get; } = new();
     public ObservableCollection<WorstCustomerDto> WorstCustomers { get; } = new();
@@ -261,15 +264,23 @@ public class AdminDashboardViewModel : INotifyPropertyChanged
         var model = new PlotModel
         {
             Title = "月別売上（請求金額ベース）",
+            Subtitle = $"{SelectedYear}年 1月〜12月",
             TextColor = OxyColor.Parse("#E5E7EB"),
             PlotAreaBorderColor = OxyColor.Parse("#334155"),
-            Background = OxyColors.Transparent
+            Background = OxyColors.Transparent,
+            TitleColor = OxyColor.Parse("#F8FAFC"),
+            SubtitleColor = OxyColor.Parse("#94A3B8"),
+            TitleFontSize = 14,
+            SubtitleFontSize = 10,
+            DefaultFontSize = 11,
+            Padding = new OxyThickness(6, 6, 6, 6),
+            IsLegendVisible = false
         };
 
         var monthlyMap = Enumerable.Range(1, 12)
             .ToDictionary(m => m, _ => 0m);
 
-        foreach (var item in monthlySales)
+        foreach (var item in monthlySales ?? Enumerable.Empty<AdminMonthlySalesDto>())
         {
             if (item.Month >= 1 && item.Month <= 12)
             {
@@ -277,53 +288,104 @@ public class AdminDashboardViewModel : INotifyPropertyChanged
             }
         }
 
-        var categoryAxis = new CategoryAxis
+        var maxValue = monthlyMap.Values.DefaultIfEmpty(0m).Max();
+        var axisMax = CalculateAxisMaximum(maxValue);
+
+        // 横軸（月）
+        var xAxis = new LinearAxis
         {
-            Position = AxisPosition.Left,
+            Position = AxisPosition.Bottom,
+            Minimum = 1,
+            Maximum = 12,
+            AbsoluteMinimum = 1,
+            AbsoluteMaximum = 12,
+            MajorStep = 1,
+            MinorStep = 1,
             TextColor = OxyColor.Parse("#CBD5E1"),
             TicklineColor = OxyColor.Parse("#475569"),
             AxislineColor = OxyColor.Parse("#475569"),
-            GapWidth = 0.4
+            MajorGridlineStyle = LineStyle.None,
+            MinorGridlineStyle = LineStyle.None,
+            IsPanEnabled = false,
+            IsZoomEnabled = false,
+            LabelFormatter = value =>
+            {
+                var month = (int)Math.Round(value);
+                return month >= 1 && month <= 12 ? $"{month}月" : string.Empty;
+            }
         };
 
-        for (int month = 1; month <= 12; month++)
+        // 縦軸（金額）
+        var yAxis = new LinearAxis
         {
-            categoryAxis.Labels.Add($"{month}月");
-        }
-
-        var valueAxis = new LinearAxis
-        {
-            Position = AxisPosition.Bottom,
+            Position = AxisPosition.Left,
             Minimum = 0,
+            Maximum = axisMax,
+            AbsoluteMinimum = 0,
             TextColor = OxyColor.Parse("#CBD5E1"),
             TicklineColor = OxyColor.Parse("#475569"),
             AxislineColor = OxyColor.Parse("#475569"),
             MajorGridlineStyle = LineStyle.Solid,
             MinorGridlineStyle = LineStyle.None,
             MajorGridlineColor = OxyColor.Parse("#1E293B"),
-            StringFormat = "#,0"
+            StringFormat = "#,0",
+            Title = "円",
+            TitleColor = OxyColor.Parse("#94A3B8"),
+            FontSize = 11,
+            IsPanEnabled = false,
+            IsZoomEnabled = false
         };
 
-        var series = new BarSeries
+        var series = new LineSeries
         {
             Title = "請求金額",
-            FillColor = OxyColor.Parse("#38BDF8"),
-            StrokeColor = OxyColor.Parse("#7DD3FC"),
-            StrokeThickness = 1,
-            LabelPlacement = LabelPlacement.Outside,
-            LabelFormatString = "{0:#,0}"
+            Color = OxyColor.Parse("#38BDF8"),
+            StrokeThickness = 2.5,
+            MarkerType = MarkerType.Circle,
+            MarkerSize = 4,
+            MarkerFill = OxyColor.Parse("#7DD3FC"),
+            MarkerStroke = OxyColor.Parse("#E0F2FE"),
+            MarkerStrokeThickness = 1,
+            CanTrackerInterpolatePoints = false,
+            TrackerFormatString = "{0}\n月: {2:0}\n金額: {4:#,0} 円"
         };
 
         for (int month = 1; month <= 12; month++)
         {
-            series.Items.Add(new BarItem((double)monthlyMap[month]));
+            series.Points.Add(new DataPoint(month, (double)monthlyMap[month]));
         }
 
-        model.Axes.Add(categoryAxis);
-        model.Axes.Add(valueAxis);
+        model.Axes.Add(xAxis);
+        model.Axes.Add(yAxis);
         model.Series.Add(series);
 
         MonthlySalesPlotModel = model;
+    }
+
+    private static double CalculateAxisMaximum(decimal maxValue)
+    {
+        if (maxValue <= 0)
+        {
+            return 100000;
+        }
+
+        var raw = (double)maxValue * 1.2;
+
+        if (raw <= 100000) return RoundUp(raw, 10000);
+        if (raw <= 500000) return RoundUp(raw, 50000);
+        if (raw <= 1000000) return RoundUp(raw, 100000);
+
+        return RoundUp(raw, 500000);
+    }
+
+    private static double RoundUp(double value, double unit)
+    {
+        return Math.Ceiling(value / unit) * unit;
+    }
+
+    private static IPlotController CreateFixedPlotController()
+    {
+        return new PlotController();
     }
 
     private static string FormatCurrency(decimal value)
@@ -400,5 +462,26 @@ public class AdminOperationLogItemViewModel
         };
 
         return string.IsNullOrWhiteSpace(entityId) ? label : $"{label} #{entityId}";
+    }
+
+    private static double CalculateAxisMaximum(decimal maxValue)
+    {
+        if (maxValue <= 0)
+        {
+            return 100000;
+        }
+
+        var raw = (double)maxValue * 1.2;
+
+        if (raw <= 100000) return RoundUp(raw, 10000);
+        if (raw <= 500000) return RoundUp(raw, 50000);
+        if (raw <= 1000000) return RoundUp(raw, 100000);
+
+        return RoundUp(raw, 500000);
+    }
+
+    private static double RoundUp(double value, double unit)
+    {
+        return Math.Ceiling(value / unit) * unit;
     }
 }
