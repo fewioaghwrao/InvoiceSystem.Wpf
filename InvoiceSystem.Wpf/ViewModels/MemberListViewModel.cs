@@ -1,6 +1,7 @@
 ﻿using InvoiceSystem.Wpf.Infrastructure;
 using InvoiceSystem.Wpf.Models;
 using InvoiceSystem.Wpf.Services;
+using InvoiceSystem.Wpf.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -235,19 +236,18 @@ public class MemberListViewModel : INotifyPropertyChanged
         await LoadAsync();
     }
 
-    private void OpenDetail(object? parameter)
+    private async void OpenDetail(object? parameter)
     {
-        if (parameter is not MemberRowViewModel member) return;
+        if (parameter is not MemberRowViewModel member)
+            return;
 
-        MessageBox.Show(
-            $"詳細画面へ遷移: ID={member.Id} / {member.Name}",
-            "詳細",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new MemberDetailWindow(_memberService, member.Id);
+        var result = window.ShowDialog();
 
-        // 実運用ではここで詳細画面を開く
-        // var window = new MemberDetailWindow(member.Id);
-        // window.ShowDialog();
+        if (result == true)
+        {
+            await LoadAsync();
+        }
     }
 
     private bool CanDisableMember(object? parameter)

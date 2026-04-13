@@ -63,4 +63,24 @@ public class MemberService
                 string.IsNullOrWhiteSpace(text) ? "退会（無効化）に失敗しました。" : text);
         }
     }
+
+    public async Task<MemberDetailDto?> GetByIdAsync(int id)
+    {
+        var response = await _httpClient.GetAsync($"/api/members/{id}");
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<MemberDetailDto>();
+    }
+
+    public async Task UpdateAsync(int id, MemberUpdateRequest request)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"/bff/members/{id}", request);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task DisableAsync(int id)
+    {
+        var response = await _httpClient.PutAsync($"/bff/members/{id}/disable", null);
+        response.EnsureSuccessStatusCode();
+    }
 }
