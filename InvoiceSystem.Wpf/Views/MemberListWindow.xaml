@@ -78,6 +78,14 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="12,10" />
         </Style>
+        <Style x:Key="WhiteComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="#334155" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,4" />
+        </Style>
     </Window.Resources>
 
     <Grid Margin="20">
@@ -142,13 +150,10 @@
                                FontSize="11"
                                Foreground="#CBD5E1" />
                     <ComboBox Margin="0,6,0,0"
-                              Height="34"
-                              ItemsSource="{Binding RoleOptions}"
-                              SelectedItem="{Binding SelectedRole}"
-                              DisplayMemberPath="Label"
-                              Background="#020617"
-                              Foreground="#E2E8F0"
-                              BorderBrush="#334155" />
+          Style="{StaticResource WhiteComboBoxStyle}"
+          ItemsSource="{Binding RoleOptions}"
+          SelectedItem="{Binding SelectedRole}"
+          DisplayMemberPath="Label" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Margin="0,0,12,0">
@@ -156,13 +161,10 @@
                                FontSize="11"
                                Foreground="#CBD5E1" />
                     <ComboBox Margin="0,6,0,0"
-                              Height="34"
-                              ItemsSource="{Binding StatusOptions}"
-                              SelectedItem="{Binding SelectedStatus}"
-                              DisplayMemberPath="Label"
-                              Background="#020617"
-                              Foreground="#E2E8F0"
-                              BorderBrush="#334155" />
+          Style="{StaticResource WhiteComboBoxStyle}"
+          ItemsSource="{Binding StatusOptions}"
+          SelectedItem="{Binding SelectedStatus}"
+          DisplayMemberPath="Label" />
                 </StackPanel>
 
                 <Button Grid.Column="3"
@@ -177,7 +179,7 @@
                         Height="34"
                         Style="{StaticResource SubButtonStyle}"
                         Content="リセット"
-                        Command="{Binding ResetCommand}" />
+                        Command="{Binding ResetCommand}" Cursor="Hand" />
             </Grid>
         </Border>
 
