@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InvoiceSystem.Wpf.Models;
+using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -6,7 +8,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using InvoiceSystem.Wpf.Models;
 
 namespace InvoiceSystem.Wpf.Services;
 
@@ -319,5 +320,35 @@ public class InvoiceService
         }
 
         throw new Exception(message ?? "入金確認データの取得に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<List<InvoiceListItemDto>> SearchInvoicesAsync(InvoiceSearchRequest request)
+    {
+        var queryParams = new List<string>();
+
+        void Add(string key, string? value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                queryParams.Add($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
+            }
+        }
+
+        Add("InvoiceNumber", request.InvoiceNumber);
+        Add("MemberName", request.MemberName);
+        Add("StatusId", request.StatusId?.ToString());
+        Add("FromInvoiceDate", request.FromInvoiceDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        Add("ToInvoiceDate", request.ToInvoiceDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        Add("Page", request.Page.ToString());
+        Add("PageSize", request.PageSize.ToString());
+
+        var url = "/api/invoices";
+        if (queryParams.Count > 0)
+        {
+            url += "?" + string.Join("&", queryParams);
+        }
+
+        var result = await _httpClient.GetFromJsonAsync<List<InvoiceListItemDto>>(url);
+        return result ?? new List<InvoiceListItemDto>();
     }
 }

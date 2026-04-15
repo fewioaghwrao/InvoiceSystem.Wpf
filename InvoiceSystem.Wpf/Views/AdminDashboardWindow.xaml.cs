@@ -10,6 +10,7 @@ public partial class AdminDashboardWindow : Window
     private readonly AdminDashboardViewModel _viewModel;
     private readonly AuthService _authService;
     private readonly MemberService _memberService;
+    private readonly InvoiceService _invoiceService;
 
     public AdminDashboardWindow(
         CurrentUser? currentUser,
@@ -22,11 +23,13 @@ public partial class AdminDashboardWindow : Window
         InitializeComponent();
 
         _authService = authService;
+        _invoiceService = invoiceService;
+        _memberService = memberService;
+
         _viewModel = new AdminDashboardViewModel(adminService, currentUser);
         DataContext = _viewModel;
 
         Loaded += AdminDashboardWindow_Loaded;
-        _memberService = memberService;
     }
 
     private async void AdminDashboardWindow_Loaded(object sender, RoutedEventArgs e)
@@ -68,7 +71,6 @@ public partial class AdminDashboardWindow : Window
         }
         catch
         {
-            // APIログアウト未実装や通信失敗時でも、画面上はログイン画面へ戻す
         }
 
         var loginWindow = new LoginWindow();
@@ -78,11 +80,12 @@ public partial class AdminDashboardWindow : Window
 
     private void InvoicesButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "請求書一覧画面への遷移は今後接続予定です。",
-            "案内",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new InvoiceListWindow(_invoiceService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
     }
 
     private void MembersButton_OnClick(object sender, RoutedEventArgs e)
