@@ -182,6 +182,9 @@
                     <Button Content="再読込"
                             Style="{StaticResource PrimaryButtonStyle}"
                             Click="ReloadButton_OnClick"/>
+                    <Button Content="新規作成"
+        Style="{StaticResource SecondaryButtonStyle}"
+        Click="CreateButton_OnClick"/>
                     <Button Content="閉じる"
                             Style="{StaticResource SecondaryButtonStyle}"
                             Margin="0"

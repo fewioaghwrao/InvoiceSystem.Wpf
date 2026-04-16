@@ -9,12 +9,14 @@ namespace InvoiceSystem.Wpf.Views;
 
 public partial class InvoiceListWindow : Window
 {
+    private readonly InvoiceService _invoiceService;
     private readonly InvoiceListViewModel _viewModel;
 
     public InvoiceListWindow(InvoiceService invoiceService)
     {
         InitializeComponent();
 
+        _invoiceService = invoiceService;
         _viewModel = new InvoiceListViewModel(invoiceService);
         DataContext = _viewModel;
 
@@ -33,6 +35,7 @@ public partial class InvoiceListWindow : Window
 
     private async void SearchButton_OnClick(object sender, RoutedEventArgs e)
     {
+        _viewModel.CurrentPage = 1;
         await _viewModel.LoadAsync();
     }
 
@@ -44,6 +47,7 @@ public partial class InvoiceListWindow : Window
     private async void ResetButton_OnClick(object sender, RoutedEventArgs e)
     {
         _viewModel.ResetSearch();
+        _viewModel.CurrentPage = 1;
         await _viewModel.LoadAsync();
     }
 
@@ -100,10 +104,46 @@ public partial class InvoiceListWindow : Window
 
     private void OpenDetail(InvoiceListItemDto invoice)
     {
-        MessageBox.Show(
-            $"請求書詳細画面へ遷移予定です。\n\n請求番号: {invoice.InvoiceNumber}\nID: {invoice.Id}",
-            "案内",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        try
+        {
+            var window = new AdminInvoiceDetailWindow(_invoiceService, invoice.Id)
+            {
+                Owner = this
+            };
+
+            window.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"請求書詳細画面を開けませんでした。\n\n{ex.Message}",
+                "エラー",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+    }
+    private void CreateButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var window = new AdminInvoiceEditWindow(_invoiceService)
+            {
+                Owner = this
+            };
+
+            var result = window.ShowDialog();
+            if (result == true)
+            {
+                _ = _viewModel.LoadAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"請求書作成画面を開けませんでした。\n\n{ex.Message}",
+                "エラー",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 }
