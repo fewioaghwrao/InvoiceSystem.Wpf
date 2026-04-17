@@ -538,10 +538,12 @@
                    FontWeight="SemiBold"/>
 
                                 <oxy:PlotView Grid.Row="2"
-                      Model="{Binding MonthlySalesPlotModel}"
-                      Background="Transparent"
-                      BorderThickness="0"
-                      Margin="0,0,0,4"/>
+              Model="{Binding MonthlySalesPlotModel}"
+              Controller="{Binding FixedPlotController}"
+              Background="Transparent"
+              BorderThickness="0"
+              Margin="0,0,0,4"
+              IsManipulationEnabled="False" />
 
                                 <TextBlock Grid.Row="4"
                    Text="請求金額ベースの月次推移を表示しています。"

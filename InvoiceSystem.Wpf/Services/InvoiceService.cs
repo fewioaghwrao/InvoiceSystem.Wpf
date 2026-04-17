@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InvoiceSystem.Wpf.Models;
+using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -6,7 +8,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using InvoiceSystem.Wpf.Models;
 
 namespace InvoiceSystem.Wpf.Services;
 
@@ -319,5 +320,241 @@ public class InvoiceService
         }
 
         throw new Exception(message ?? "入金確認データの取得に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<List<InvoiceListItemDto>> SearchInvoicesAsync(InvoiceSearchRequest request)
+    {
+        var queryParams = new List<string>();
+
+        void Add(string key, string? value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                queryParams.Add($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
+            }
+        }
+
+        Add("InvoiceNumber", request.InvoiceNumber);
+        Add("MemberName", request.MemberName);
+        Add("StatusId", request.StatusId?.ToString());
+        Add("FromInvoiceDate", request.FromInvoiceDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        Add("ToInvoiceDate", request.ToInvoiceDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        Add("Page", request.Page.ToString());
+        Add("PageSize", request.PageSize.ToString());
+
+        var url = "/api/invoices";
+        if (queryParams.Count > 0)
+        {
+            url += "?" + string.Join("&", queryParams);
+        }
+
+        var result = await _httpClient.GetFromJsonAsync<List<InvoiceListItemDto>>(url);
+        return result ?? new List<InvoiceListItemDto>();
+    }
+
+    public async Task<InvoiceDetailDto> GetAdminInvoiceDetailAsync(long invoiceId)
+    {
+        using var response = await _httpClient.GetAsync($"/api/invoices/{invoiceId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<InvoiceDetailDto>();
+
+            if (result == null)
+            {
+                throw new Exception("請求書詳細応答の解析に失敗しました。");
+            }
+
+            return result;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この請求書を参照する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new Exception("請求書が見つかりませんでした。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "請求書詳細の取得条件が不正です。");
+        }
+
+        throw new Exception(message ?? "請求書詳細の取得に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<PdfDownloadResult> GetAdminInvoicePdfAsync(long invoiceId)
+    {
+        using var response = await _httpClient.GetAsync($"/api/invoices/{invoiceId}/pdf");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var contentBytes = await response.Content.ReadAsByteArrayAsync();
+
+            if (contentBytes == null || contentBytes.Length == 0)
+            {
+                throw new Exception("PDFデータが空です。");
+            }
+
+            var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/pdf";
+            var fileName = GetFileNameFromResponse(response) ?? $"invoice-{invoiceId}.pdf";
+
+            if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                fileName += ".pdf";
+            }
+
+            return new PdfDownloadResult
+            {
+                Content = contentBytes,
+                FileName = fileName,
+                ContentType = contentType
+            };
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この請求書PDFを参照する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new Exception("請求書PDFが見つかりませんでした。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "請求書PDFの取得条件が不正です。");
+        }
+
+        throw new Exception(message ?? "請求書PDFの取得に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task UpdateAdminInvoiceAsync(long invoiceId, InvoiceUpsertRequestDto request)
+    {
+        using var response = await _httpClient.PutAsJsonAsync($"/api/invoices/{invoiceId}", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この請求書を更新する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new Exception("更新対象の請求書が見つかりませんでした。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "請求書更新の入力内容が不正です。");
+        }
+
+        throw new Exception(message ?? "請求書更新に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<long> CreateAdminInvoiceAsync(InvoiceUpsertRequestDto request)
+    {
+        using var response = await _httpClient.PostAsJsonAsync("/api/invoices", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Created: 本文に DTO が返る想定
+            var created = await response.Content.ReadFromJsonAsync<InvoiceDetailDto>();
+            if (created != null)
+            {
+                return created.Id;
+            }
+
+            // DTOが読めなくても Location ヘッダから拾えれば拾う
+            var location = response.Headers.Location?.ToString();
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                var last = location.Split('/').LastOrDefault();
+                if (long.TryParse(last, out var id))
+                {
+                    return id;
+                }
+            }
+
+            return 0;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この請求書を作成する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "請求書作成の入力内容が不正です。");
+        }
+
+        throw new Exception(message ?? "請求書作成に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<List<MemberOptionDto>> GetMemberOptionsAsync()
+    {
+        using var response = await _httpClient.GetAsync("/api/members/options");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<List<MemberOptionDto>>();
+            return result ?? new List<MemberOptionDto>();
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("会員選択肢を参照する権限がありません。");
+        }
+
+        throw new Exception(message ?? "会員一覧の取得に失敗しました。");
     }
 }
