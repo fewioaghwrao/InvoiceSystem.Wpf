@@ -557,4 +557,125 @@ public class InvoiceService
 
         throw new Exception(message ?? "会員一覧の取得に失敗しました。");
     }
+
+    public async Task<CollectionSnapshotDto> GetCollectionSnapshotAsync(long invoiceId)
+    {
+        using var response = await _httpClient.GetAsync($"/api/collections/{invoiceId}/snapshot");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<CollectionSnapshotDto>();
+            if (result == null)
+            {
+                throw new Exception("督促対象情報の解析に失敗しました。");
+            }
+
+            return result;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この督促情報を参照する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new Exception("対象の請求情報が見つかりませんでした。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "督促対象情報の取得条件が不正です。");
+        }
+
+        throw new Exception(message ?? "督促対象情報の取得に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<List<DunningLogDto>> GetCollectionLogsAsync(long invoiceId)
+    {
+        using var response = await _httpClient.GetAsync($"/api/collections/{invoiceId}/logs");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<List<DunningLogDto>>();
+            return result ?? new List<DunningLogDto>();
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この督促履歴を参照する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new Exception("督促履歴が見つかりませんでした。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "督促履歴の取得条件が不正です。");
+        }
+
+        throw new Exception(message ?? "督促履歴の取得に失敗しました。時間をおいて再度お試しください。");
+    }
+
+    public async Task<long> CreateCollectionLogAsync(long invoiceId, CreateDunningLogRequestDto request)
+    {
+        using var response = await _httpClient.PostAsJsonAsync($"/api/collections/{invoiceId}/logs", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var doc = await JsonDocument.ParseAsync(stream);
+
+            if (doc.RootElement.TryGetProperty("id", out var idElement)
+                && idElement.TryGetInt64(out var id))
+            {
+                return id;
+            }
+
+            return 0;
+        }
+
+        var responseText = await response.Content.ReadAsStringAsync();
+        var message = TryReadMessage(responseText);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new Exception("ログイン情報の有効期限が切れています。再度ログインしてください。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new Exception("この督促履歴を登録する権限がありません。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new Exception("対象の請求情報が見つかりませんでした。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            throw new Exception(message ?? "督促登録の入力内容が不正です。");
+        }
+
+        throw new Exception(message ?? "督促登録に失敗しました。時間をおいて再度お試しください。");
+    }
 }

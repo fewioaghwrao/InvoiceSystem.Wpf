@@ -74,7 +74,7 @@ public partial class InvoiceListWindow : Window
         }
     }
 
-    private void RemindButton_OnClick(object sender, RoutedEventArgs e)
+    private async void RemindButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (sender is not Button button || button.DataContext is not InvoiceListItemDto invoice)
             return;
@@ -82,16 +82,25 @@ public partial class InvoiceListWindow : Window
         if (!invoice.CanRemind)
             return;
 
-        MessageBox.Show(
-            $"催促画面へ遷移予定です。\n\n請求番号: {invoice.InvoiceNumber}\n会員名: {invoice.MemberName}",
-            "催促",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        try
+        {
+            var window = new AdminCollectionWindow(_invoiceService, invoice.Id)
+            {
+                Owner = this
+            };
 
-        // 将来的にはこう接続
-        // var window = new CollectionWindow(invoice.Id);
-        // window.Owner = this;
-        // window.ShowDialog();
+            window.ShowDialog();
+
+            await _viewModel.LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"催促画面を開けませんでした。\n\n{ex.Message}",
+                "エラー",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 
     private void InvoiceGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

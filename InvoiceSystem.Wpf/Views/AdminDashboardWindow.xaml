@@ -253,12 +253,13 @@
             </Border>
 
             <!-- Top navigation -->
+            <!-- Top navigation -->
             <Border Grid.Row="2"
-                    CornerRadius="18"
-                    Padding="16"
-                    BorderBrush="#1E293B"
-                    BorderThickness="1"
-                    Background="#CC0F172A">
+        CornerRadius="18"
+        Padding="16"
+        BorderBrush="#1E293B"
+        BorderThickness="1"
+        Background="#CC0F172A">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -268,48 +269,59 @@
 
                     <StackPanel>
                         <TextBlock Text="管理メニュー"
-                                   Foreground="White"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"/>
+                       Foreground="White"
+                       FontSize="15"
+                       FontWeight="SemiBold"/>
                         <TextBlock Text="主要な一覧画面へ移動できます。"
-                                   Margin="0,4,0,0"
-                                   Foreground="#94A3B8"
-                                   FontSize="12"/>
+                       Margin="0,4,0,0"
+                       Foreground="#94A3B8"
+                       FontSize="12"/>
                     </StackPanel>
 
                     <UniformGrid Grid.Row="2"
-                                 Columns="3">
+                     Columns="4">
                         <Button Margin="0,0,12,0"
-                                Height="72"
-                                Content="請求書一覧"
-                                Click="InvoicesButton_OnClick"
-                                Background="#0F172A"
-                                Foreground="White"
-                                BorderBrush="#0EA5E9"
-                                BorderThickness="1"
-                                FontSize="18"
-                                FontWeight="SemiBold"/>
+                    Height="72"
+                    Content="請求書一覧"
+                    Click="InvoicesButton_OnClick"
+                    Background="#0F172A"
+                    Foreground="White"
+                    BorderBrush="#0EA5E9"
+                    BorderThickness="1"
+                    FontSize="18"
+                    FontWeight="SemiBold"/>
 
                         <Button Margin="0,0,12,0"
-                                Height="72"
-                                Content="会員一覧"
-                                Click="MembersButton_OnClick"
-                                Background="#0F172A"
-                                Foreground="White"
-                                BorderBrush="#10B981"
-                                BorderThickness="1"
-                                FontSize="18"
-                                FontWeight="SemiBold"/>
+                    Height="72"
+                    Content="会員一覧"
+                    Click="MembersButton_OnClick"
+                    Background="#0F172A"
+                    Foreground="White"
+                    BorderBrush="#10B981"
+                    BorderThickness="1"
+                    FontSize="18"
+                    FontWeight="SemiBold"/>
+
+                        <Button Margin="0,0,12,0"
+                    Height="72"
+                    Content="売上一覧"
+                    Click="SalesButton_OnClick"
+                    Background="#0F172A"
+                    Foreground="White"
+                    BorderBrush="#6366F1"
+                    BorderThickness="1"
+                    FontSize="18"
+                    FontWeight="SemiBold"/>
 
                         <Button Height="72"
-                                Content="売上一覧"
-                                Click="SalesButton_OnClick"
-                                Background="#0F172A"
-                                Foreground="White"
-                                BorderBrush="#6366F1"
-                                BorderThickness="1"
-                                FontSize="18"
-                                FontWeight="SemiBold"/>
+                    Content="入金一覧"
+                    Click="PaymentsButton_OnClick"
+                    Background="#0F172A"
+                    Foreground="White"
+                    BorderBrush="#F59E0B"
+                    BorderThickness="1"
+                    FontSize="18"
+                    FontWeight="SemiBold"/>
                     </UniformGrid>
                 </Grid>
             </Border>
