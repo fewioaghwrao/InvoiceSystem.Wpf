@@ -11,6 +11,8 @@ public partial class AdminDashboardWindow : Window
     private readonly AuthService _authService;
     private readonly MemberService _memberService;
     private readonly InvoiceService _invoiceService;
+    private readonly SalesService _salesService;
+    private readonly PaymentService _paymentService;
 
     public AdminDashboardWindow(
         CurrentUser? currentUser,
@@ -18,13 +20,17 @@ public partial class AdminDashboardWindow : Window
         InvoiceService invoiceService,
         AccountService accountService,
         AdminService adminService,
-        MemberService memberService)
+        MemberService memberService,
+        SalesService salesService,
+        PaymentService paymentService)
     {
         InitializeComponent();
 
         _authService = authService;
         _invoiceService = invoiceService;
         _memberService = memberService;
+        _salesService = salesService;
+        _paymentService = paymentService;
 
         _viewModel = new AdminDashboardViewModel(adminService, currentUser);
         DataContext = _viewModel;
@@ -100,10 +106,21 @@ public partial class AdminDashboardWindow : Window
 
     private void SalesButton_OnClick(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "売上一覧画面への遷移は今後接続予定です。",
-            "案内",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        var window = new SalesListWindow(_salesService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
+    }
+
+    private void PaymentsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var window = new PaymentListWindow(_paymentService, _invoiceService)
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
     }
 }

@@ -18,6 +18,8 @@ public partial class LoginWindow : Window
     private readonly AccountService _accountService;
     private readonly AdminService _adminService;
     private readonly MemberService _memberService;
+    private readonly SalesService _salesService;
+    private readonly PaymentService _paymentService;
     private bool _isPasswordVisible;
 
     public LoginWindow()
@@ -42,6 +44,8 @@ public partial class LoginWindow : Window
         _accountService = new AccountService(httpClient);
         _adminService = new AdminService(httpClient);
         _memberService = new MemberService(httpClient);
+        _salesService = new SalesService(httpClient);
+        _paymentService = new PaymentService(httpClient);
 
         _viewModel = new LoginViewModel(_authService);
         _viewModel.LoginSucceeded += OnLoginSucceeded;
@@ -110,7 +114,9 @@ public partial class LoginWindow : Window
                 _invoiceService,
                 _accountService,
                 _adminService,
-    _memberService);
+                _memberService,
+                _salesService,
+                _paymentService);
 
             adminWindow.Show();
             Close();
