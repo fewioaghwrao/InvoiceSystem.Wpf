@@ -62,13 +62,14 @@ public partial class AdminDashboardWindow : Window
 
     private void LogoutButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var result = MessageBox.Show(
-            "ログアウトしますか？",
-            "ログアウト確認",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+        var confirmed = ShowConfirmDialog(
+            title: "ログアウト確認",
+            message: "管理者セッションを終了してログアウトしますか？",
+            confirmText: "ログアウト",
+            visualType: ConfirmDialogWindow.DialogVisualType.DangerConfirm,
+            subMessage: "ログアウトすると、再度ログインが必要になります。");
 
-        if (result != MessageBoxResult.Yes)
+        if (!confirmed)
             return;
 
         try
@@ -122,5 +123,27 @@ public partial class AdminDashboardWindow : Window
         };
 
         window.ShowDialog();
+    }
+
+    private bool ShowConfirmDialog(
+    string title,
+    string message,
+    string confirmText,
+    ConfirmDialogWindow.DialogVisualType visualType = ConfirmDialogWindow.DialogVisualType.Default,
+    string? subMessage = null)
+    {
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage)
+        {
+            Owner = this
+        };
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
     }
 }

@@ -90,6 +90,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="10"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- ヘッダ -->
@@ -254,6 +256,33 @@
         FontWeight="SemiBold"
         Cursor="Hand"
         Click="RegisterButton_OnClick"/>
+
+                    <StackPanel Grid.Row="16"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center">
+                        <Button Content="利用規約"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#7DD3FC"
+            FontSize="11"
+            FontWeight="SemiBold"
+            Cursor="Hand"
+            Click="OpenTermsButton_OnClick"/>
+
+                        <TextBlock Text=" / "
+               Foreground="#64748B"
+               FontSize="11"
+               VerticalAlignment="Center"/>
+
+                        <Button Content="プライバシーポリシー"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#7DD3FC"
+            FontSize="11"
+            FontWeight="SemiBold"
+            Cursor="Hand"
+            Click="OpenPrivacyPolicyButton_OnClick"/>
+                    </StackPanel>
 
                 </Grid>
             </Border>

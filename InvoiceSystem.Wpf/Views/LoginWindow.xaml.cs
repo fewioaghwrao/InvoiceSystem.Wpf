@@ -142,4 +142,24 @@ public partial class LoginWindow : Window
 
         window.ShowDialog();
     }
+
+    private void OpenTermsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var window = new TermsWindow
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
+    }
+
+    private void OpenPrivacyPolicyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var window = new PrivacyPolicyWindow
+        {
+            Owner = this
+        };
+
+        window.ShowDialog();
+    }
 }

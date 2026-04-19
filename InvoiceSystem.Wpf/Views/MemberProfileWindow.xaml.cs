@@ -141,13 +141,14 @@ public partial class MemberProfileWindow : Window
                 $"\n\nメールアドレスが変更されます。\n変更前：{_originalEmail}\n変更後：{profile.Email}\n\n※ Lite版のため、確認メールは送信されません。";
         }
 
-        var ok = MessageBox.Show(
-            confirmMessage,
-            "保存内容の確認",
-            MessageBoxButton.OKCancel,
-            MessageBoxImage.Question);
+        var confirmed = ShowConfirmDialog(
+            title: "保存内容の確認",
+            message: "入力内容を保存します。よろしいですか？",
+            confirmText: "保存する",
+            visualType: ConfirmDialogWindow.DialogVisualType.SaveConfirm,
+            subMessage: confirmMessage);
 
-        if (ok != MessageBoxResult.OK)
+        if (!confirmed)
         {
             return;
         }
@@ -186,13 +187,14 @@ public partial class MemberProfileWindow : Window
 
     private async void WithdrawButton_Click(object sender, RoutedEventArgs e)
     {
-        var ok = MessageBox.Show(
-            "本当に退会しますか？\n\n退会後はログインできなくなります。",
-            "退会確認",
-            MessageBoxButton.OKCancel,
-            MessageBoxImage.Warning);
+        var confirmed = ShowConfirmDialog(
+            title: "退会確認",
+            message: "本当に退会しますか？",
+            confirmText: "退会する",
+            visualType: ConfirmDialogWindow.DialogVisualType.DangerConfirm,
+            subMessage: "退会後はログインできなくなります。この操作は取り消せません。");
 
-        if (ok != MessageBoxResult.OK)
+        if (!confirmed)
         {
             return;
         }
@@ -266,5 +268,27 @@ public partial class MemberProfileWindow : Window
     {
         var v = value?.Trim();
         return string.IsNullOrWhiteSpace(v) ? null : v;
+    }
+
+    private bool ShowConfirmDialog(
+    string title,
+    string message,
+    string confirmText,
+    ConfirmDialogWindow.DialogVisualType visualType,
+    string? subMessage = null)
+    {
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage)
+        {
+            Owner = this
+        };
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
     }
 }

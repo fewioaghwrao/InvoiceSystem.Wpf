@@ -138,215 +138,252 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#020617" Offset="0.0"/>
+                <GradientStop Color="#0F172A" Offset="0.5"/>
+                <GradientStop Color="#111827" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="12"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="12"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Ellipse Width="420"
+                 Height="420"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Margin="-120,-120,0,0"
+                 Opacity="0.18"
+                 IsHitTestVisible="False">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#38BDF8" Offset="0"/>
+                    <GradientStop Color="#0038BDF8" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
 
-        <!-- Header -->
-        <Border Grid.Row="0"
+        <Ellipse Width="420"
+                 Height="420"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Bottom"
+                 Margin="0,0,-120,-120"
+                 Opacity="0.15"
+                 IsHitTestVisible="False">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#6366F1" Offset="0"/>
+                    <GradientStop Color="#006366F1" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0"
                 CornerRadius="20"
                 Padding="20"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 Background="#CC0F172A">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel>
-                    <TextBlock Text="請求書一覧（管理者）"
+                    <StackPanel>
+                        <TextBlock Text="請求書一覧（管理者）"
                                Foreground="White"
                                FontSize="24"
                                FontWeight="SemiBold"/>
-                    <TextBlock Text="請求番号・会員名・ステータス・請求日で検索し、請求情報を一覧で確認できます。"
+                        <TextBlock Text="請求番号・会員名・ステータス・請求日で検索し、請求情報を一覧で確認できます。"
                                Margin="0,8,0,0"
                                Foreground="#94A3B8"
                                FontSize="13"/>
-                </StackPanel>
+                    </StackPanel>
 
-                <StackPanel Grid.Column="1"
+                    <StackPanel Grid.Column="1"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
-                    <Button Content="再読込"
+                        <Button Content="再読込"
                             Style="{StaticResource PrimaryButtonStyle}"
                             Click="ReloadButton_OnClick"/>
-                    <Button Content="新規作成"
+                        <Button Content="新規作成"
         Style="{StaticResource SecondaryButtonStyle}"
         Click="CreateButton_OnClick"/>
-                    <Button Content="閉じる"
+                        <Button Content="閉じる"
                             Style="{StaticResource SecondaryButtonStyle}"
                             Margin="0"
                             Click="CloseButton_OnClick"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <!-- Search -->
-        <Border Grid.Row="2"
+            <!-- Search -->
+            <Border Grid.Row="2"
                 CornerRadius="18"
                 Padding="16"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 Background="#CC0F172A">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="12"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="12"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <StackPanel>
-                    <TextBlock Text="検索条件"
+                    <StackPanel>
+                        <TextBlock Text="検索条件"
                                Foreground="White"
                                FontSize="15"
                                FontWeight="SemiBold"/>
-                    <TextBlock Text="条件を入力して請求書を絞り込みます。"
+                        <TextBlock Text="条件を入力して請求書を絞り込みます。"
                                Margin="0,4,0,0"
                                Foreground="#94A3B8"
                                FontSize="12"/>
-                </StackPanel>
-
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                        <TextBlock Text="請求番号" Style="{StaticResource SearchLabelStyle}"/>
-                        <TextBox Text="{Binding InvoiceNumber, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource SearchTextBoxStyle}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Margin="0,0,12,0">
-                        <TextBlock Text="会員名" Style="{StaticResource SearchLabelStyle}"/>
-                        <TextBox Text="{Binding MemberName, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource SearchTextBoxStyle}"/>
-                    </StackPanel>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="2" Margin="0,0,12,0">
-                        <TextBlock Text="ステータス" Style="{StaticResource SearchLabelStyle}"/>
-                        <ComboBox ItemsSource="{Binding StatusOptions}"
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Text="請求番号" Style="{StaticResource SearchLabelStyle}"/>
+                            <TextBox Text="{Binding InvoiceNumber, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource SearchTextBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                            <TextBlock Text="会員名" Style="{StaticResource SearchLabelStyle}"/>
+                            <TextBox Text="{Binding MemberName, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource SearchTextBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Margin="0,0,12,0">
+                            <TextBlock Text="ステータス" Style="{StaticResource SearchLabelStyle}"/>
+                            <ComboBox ItemsSource="{Binding StatusOptions}"
                                   SelectedItem="{Binding SelectedStatus}"
                                   DisplayMemberPath="Name"
                                   Style="{StaticResource SearchComboBoxStyle}"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Grid.Column="3" Margin="0,0,12,0">
-                        <TextBlock Text="請求日 From" Style="{StaticResource SearchLabelStyle}"/>
-                        <DatePicker SelectedDate="{Binding FromInvoiceDate}"
+                        <StackPanel Grid.Column="3" Margin="0,0,12,0">
+                            <TextBlock Text="請求日 From" Style="{StaticResource SearchLabelStyle}"/>
+                            <DatePicker SelectedDate="{Binding FromInvoiceDate}"
                                     Height="36"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Grid.Column="4" Margin="0,0,12,0">
-                        <TextBlock Text="請求日 To" Style="{StaticResource SearchLabelStyle}"/>
-                        <DatePicker SelectedDate="{Binding ToInvoiceDate}"
+                        <StackPanel Grid.Column="4" Margin="0,0,12,0">
+                            <TextBlock Text="請求日 To" Style="{StaticResource SearchLabelStyle}"/>
+                            <DatePicker SelectedDate="{Binding ToInvoiceDate}"
                                     Height="36"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Grid.Column="5"
+                        <StackPanel Grid.Column="5"
                                 Orientation="Horizontal"
                                 VerticalAlignment="Bottom">
-                        <Button Content="検索"
+                            <Button Content="検索"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Click="SearchButton_OnClick"/>
-                        <Button Content="リセット"
+                            <Button Content="リセット"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Margin="0"
                                 Click="ResetButton_OnClick"/>
-                    </StackPanel>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Border>
+            </Border>
 
-        <!-- Error -->
-        <Border Grid.Row="4"
+            <!-- Error -->
+            <Border Grid.Row="4"
                 Background="#3F1D1D"
                 BorderBrush="#7F1D1D"
                 BorderThickness="1"
                 CornerRadius="14"
                 Padding="14"
                 Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBlock Text="{Binding ErrorMessage}"
+                <TextBlock Text="{Binding ErrorMessage}"
                        Foreground="#FCA5A5"
                        TextWrapping="Wrap"/>
-        </Border>
+            </Border>
 
-        <!-- Result -->
-        <Grid Grid.Row="6">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="12"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+            <!-- Result -->
+            <Grid Grid.Row="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <Border Grid.Row="0"
+                <Border Grid.Row="0"
                     CornerRadius="14"
                     Padding="12"
                     BorderBrush="#1E293B"
                     BorderThickness="1"
                     Background="#CC0F172A">
-                <DockPanel>
-                    <TextBlock Text="検索結果"
+                    <DockPanel>
+                        <TextBlock Text="検索結果"
                                Foreground="White"
                                FontSize="15"
                                FontWeight="SemiBold"
                                DockPanel.Dock="Left"/>
-                    <TextBlock Text="{Binding ResultSummary}"
+                        <TextBlock Text="{Binding ResultSummary}"
                                Foreground="#7DD3FC"
                                FontWeight="SemiBold"
                                HorizontalAlignment="Right"/>
-                </DockPanel>
-            </Border>
+                    </DockPanel>
+                </Border>
 
-            <Border Grid.Row="2"
+                <Border Grid.Row="2"
                     CornerRadius="18"
                     BorderBrush="#1E293B"
                     BorderThickness="1"
                     Background="#CC0F172A"
                     Padding="16">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="12"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0"
+                        <Border Grid.Row="0"
                             Background="#0F172A"
                             BorderBrush="#334155"
                             BorderThickness="1"
                             CornerRadius="14"
                             Padding="12"
                             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⏳"
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⏳"
                                        Margin="0,0,8,0"
                                        Foreground="#7DD3FC"
                                        FontSize="14"/>
-                            <TextBlock Text="請求書一覧を読み込み中です..."
+                                <TextBlock Text="請求書一覧を読み込み中です..."
                                        Foreground="#CBD5E1"
                                        VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
+                            </StackPanel>
+                        </Border>
 
-                    <DataGrid Grid.Row="2"
+                        <DataGrid Grid.Row="2"
                               ItemsSource="{Binding Invoices}"
                               SelectedItem="{Binding SelectedInvoice}"
                               Style="{StaticResource AdminDataGridStyle}"
@@ -354,107 +391,108 @@
                               RowStyle="{StaticResource AdminDataGridRowStyle}"
                               CellStyle="{StaticResource AdminDataGridCellStyle}"
                               MouseDoubleClick="InvoiceGrid_MouseDoubleClick">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="請求日"
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="請求日"
                                                 Binding="{Binding InvoiceDate, StringFormat=yyyy/MM/dd}"
                                                 Width="120"/>
 
-                            <DataGridTextColumn Header="請求番号"
+                                <DataGridTextColumn Header="請求番号"
                                                 Binding="{Binding InvoiceNumber}"
                                                 Width="180"/>
 
-                            <DataGridTextColumn Header="会員名"
+                                <DataGridTextColumn Header="会員名"
                                                 Binding="{Binding MemberName}"
                                                 Width="*"/>
 
-                            <DataGridTextColumn Header="請求金額"
+                                <DataGridTextColumn Header="請求金額"
                                                 Binding="{Binding TotalAmount, StringFormat={}{0:C0}}"
                                                 Width="140"/>
 
-                            <DataGridTextColumn Header="支払期限"
+                                <DataGridTextColumn Header="支払期限"
                                                 Binding="{Binding DueDate, StringFormat=yyyy/MM/dd}"
                                                 Width="120"/>
-                            <DataGridTemplateColumn Header="入金ステータス" Width="150">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Border Background="{Binding StatusBackground}"
+                                <DataGridTemplateColumn Header="入金ステータス" Width="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding StatusBackground}"
                                                 BorderBrush="{Binding StatusBorderBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="999"
                                                 Padding="10,4"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding StatusName}"
+                                                <TextBlock Text="{Binding StatusName}"
                                                        Foreground="{Binding StatusForeground}"
                                                        FontSize="11"
                                                        FontWeight="SemiBold"
                                                        VerticalAlignment="Center"/>
-                                        </Border>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="操作" Width="220">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="詳細"
+                                <DataGridTemplateColumn Header="操作" Width="220">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <Button Content="詳細"
                                                     Margin="0,0,8,0"
                                                     Padding="10,5"
                                                     Style="{StaticResource SecondaryButtonStyle}"
                                                     Click="DetailButton_OnClick"/>
 
-                                            <Button Content="催促"
+                                                <Button Content="催促"
                                                     Padding="10,5"
                                                     Click="RemindButton_OnClick">
-                                                <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-                                                        <Setter Property="Foreground" Value="#FDE68A"/>
-                                                        <Setter Property="Background" Value="#3B2A12"/>
-                                                        <Setter Property="BorderBrush" Value="#D97706"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding CanRemind}" Value="False">
-                                                                <Setter Property="IsEnabled" Value="False"/>
-                                                                <Setter Property="Opacity" Value="0.45"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Button.Style>
-                                            </Button>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </Border>
-        </Grid>
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                                            <Setter Property="Foreground" Value="#FDE68A"/>
+                                                            <Setter Property="Background" Value="#3B2A12"/>
+                                                            <Setter Property="BorderBrush" Value="#D97706"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding CanRemind}" Value="False">
+                                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                                    <Setter Property="Opacity" Value="0.45"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
 
-        <!-- Pager -->
-        <Grid Grid.Row="8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <!-- Pager -->
+            <Grid Grid.Row="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Text="{Binding PageInfoText}"
+                <TextBlock Text="{Binding PageInfoText}"
                        VerticalAlignment="Center"
                        Foreground="#94A3B8"
                        FontSize="11" />
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <Button Content="← 前へ"
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="← 前へ"
                         Margin="0,0,8,0"
                         Style="{StaticResource SecondaryButtonStyle}"
                         Click="PrevPageButton_OnClick"
                         IsEnabled="{Binding CanMovePrev}" />
-                <Button Content="次へ →"
+                    <Button Content="次へ →"
                         Margin="0"
                         Style="{StaticResource SecondaryButtonStyle}"
                         Click="NextPageButton_OnClick"
                         IsEnabled="{Binding CanMoveNext}" />
-            </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

@@ -100,13 +100,12 @@ public partial class MemberDashboardWindow : Window
 
     private void BackToLoginButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var result = MessageBox.Show(
-            "ログイン画面へ戻りますか？",
-            "確認",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+        var confirmed = ShowConfirmDialog(
+            title: "ログイン画面へ戻る",
+            message: "現在の画面を閉じて、ログイン画面へ戻りますか？",
+            confirmText: "戻る");
 
-        if (result != MessageBoxResult.Yes)
+        if (!confirmed)
             return;
 
         var loginWindow = new LoginWindow();
@@ -116,13 +115,14 @@ public partial class MemberDashboardWindow : Window
 
     private void LogoutButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var result = MessageBox.Show(
-            "ログアウトしますか？",
-            "ログアウト確認",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+        var confirmed = ShowConfirmDialog(
+            title: "ログアウト確認",
+            message: "現在のセッションを終了してログアウトしますか？",
+            confirmText: "ログアウト",
+            visualType: ConfirmDialogWindow.DialogVisualType.DangerConfirm,
+            subMessage: "ログアウトすると、再度ログインが必要になります。");
 
-        if (result != MessageBoxResult.Yes)
+        if (!confirmed)
             return;
 
         _authService.Logout();
@@ -130,5 +130,27 @@ public partial class MemberDashboardWindow : Window
         var loginWindow = new LoginWindow();
         loginWindow.Show();
         Close();
+    }
+
+    private bool ShowConfirmDialog(
+        string title,
+        string message,
+        string confirmText,
+        ConfirmDialogWindow.DialogVisualType visualType = ConfirmDialogWindow.DialogVisualType.Default,
+        string? subMessage = null)
+    {
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage)
+        {
+            Owner = this
+        };
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
     }
 }

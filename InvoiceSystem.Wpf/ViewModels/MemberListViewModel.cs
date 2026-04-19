@@ -260,13 +260,14 @@ public class MemberListViewModel : INotifyPropertyChanged
     {
         if (member is null || !member.CanDisable) return;
 
-        var ok = MessageBox.Show(
-            $"「{member.Name}」を退会（無効化）しますか？{Environment.NewLine}{Environment.NewLine}※この操作は元に戻せません。",
-            "退会確認",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Warning);
+        var confirmed = ShowConfirmDialog(
+            title: "退会確認",
+            message: $"「{member.Name}」を退会（無効化）しますか？",
+            confirmText: "退会する",
+            visualType: ConfirmDialogWindow.DialogVisualType.DangerConfirm,
+            subMessage: "この操作は元に戻せません。内容を確認してから実行してください。");
 
-        if (ok != MessageBoxResult.Yes) return;
+        if (!confirmed) return;
 
         try
         {
@@ -301,6 +302,34 @@ public class MemberListViewModel : INotifyPropertyChanged
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         });
+    }
+
+    private bool ShowConfirmDialog(
+    string title,
+    string message,
+    string confirmText,
+    ConfirmDialogWindow.DialogVisualType visualType = ConfirmDialogWindow.DialogVisualType.Default,
+    string? subMessage = null)
+    {
+        var owner = Application.Current?.Windows
+            .OfType<Window>()
+            .FirstOrDefault(w => w.IsActive);
+
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage);
+
+        if (owner != null)
+        {
+            dialog.Owner = owner;
+        }
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
     }
 }
 

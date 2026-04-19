@@ -1,9 +1,11 @@
-﻿using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Input;
-using InvoiceSystem.Wpf.Infrastructure;
+﻿using InvoiceSystem.Wpf.Infrastructure;
 using InvoiceSystem.Wpf.Models;
 using InvoiceSystem.Wpf.Services;
+using InvoiceSystem.Wpf.Views;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Input;
+using System.Linq;
 
 namespace InvoiceSystem.Wpf.ViewModels;
 
@@ -298,13 +300,16 @@ public sealed class MemberDetailViewModel : ViewModelBase
     {
         ErrorMessage = null;
 
-        var result = MessageBox.Show(
-            $"本当に退会（無効化）しますか？{Environment.NewLine}{Environment.NewLine}対象: {Name}（{Email}）{Environment.NewLine}{Environment.NewLine}※この操作は元に戻せません。",
-            "退会確認",
-            MessageBoxButton.OKCancel,
-            MessageBoxImage.Warning);
+        var confirmed = ShowConfirmDialog(
+            title: "退会確認",
+            message: "本当に退会（無効化）しますか？",
+            confirmText: "退会する",
+            visualType: ConfirmDialogWindow.DialogVisualType.DangerConfirm,
+            subMessage:
+                $"対象: {Name}（{Email}）{Environment.NewLine}{Environment.NewLine}" +
+                "この操作は元に戻せません。内容を確認してから実行してください。");
 
-        if (result != MessageBoxResult.OK)
+        if (!confirmed)
             return;
 
         IsDisabling = true;
@@ -336,5 +341,31 @@ public sealed class MemberDetailViewModel : ViewModelBase
         (SaveCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (DisableCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (CloseCommand as RelayCommand)?.RaiseCanExecuteChanged();
+    }
+
+    private bool ShowConfirmDialog(
+    string title,
+    string message,
+    string confirmText,
+    ConfirmDialogWindow.DialogVisualType visualType = ConfirmDialogWindow.DialogVisualType.Default,
+    string? subMessage = null)
+    {
+        var owner = Application.Current?.Windows
+            .OfType<Window>()
+            .FirstOrDefault(w => w.IsActive) ?? _window;
+
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage)
+        {
+            Owner = owner
+        };
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
     }
 }
