@@ -128,7 +128,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- ヘッダー -->
             <Border Grid.Row="0"
                     CornerRadius="24"
                     Padding="24"
@@ -168,26 +167,24 @@
                     <StackPanel Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <TextBlock x:Name="LoadingText"
-                                   HorizontalAlignment="Right"
+                        <TextBlock HorizontalAlignment="Right"
                                    Foreground="#7DD3FC"
                                    FontSize="12"
                                    FontWeight="SemiBold"
-                                   Text=""
-                                   Visibility="Collapsed"/>
+                                   Text="{Binding LoadingMessage}"
+                                   Visibility="{Binding LoadingVisibility}"/>
 
-                        <TextBlock x:Name="ErrorText"
-                                   Margin="0,10,0,0"
+                        <TextBlock Margin="0,10,0,0"
                                    HorizontalAlignment="Right"
                                    Foreground="#FDA4AF"
                                    FontSize="12"
                                    TextWrapping="Wrap"
-                                   Width="300"/>
+                                   Width="300"
+                                   Text="{Binding ErrorMessage}"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- 上部操作 -->
             <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -208,19 +205,18 @@
                     <Button Grid.Column="2"
                             Width="160"
                             Style="{StaticResource GhostButtonStyle}"
-                            Click="BackButton_Click"
+                            Command="{Binding BackCommand}"
                             Content="請求書一覧へ戻る"/>
 
-                    <Button x:Name="PdfButton"
-                            Grid.Column="4"
+                    <Button Grid.Column="4"
                             Width="140"
                             Style="{StaticResource PrimaryButtonStyle}"
-                            Click="PdfButton_Click"
+                            Command="{Binding OpenPdfCommand}"
+                            IsEnabled="{Binding IsPdfEnabled}"
                             Content="PDF表示"/>
                 </Grid>
             </Border>
 
-            <!-- 詳細本体 -->
             <Grid Grid.Row="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -230,7 +226,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- 請求番号 / ステータス -->
                 <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -240,31 +235,29 @@
 
                         <StackPanel>
                             <TextBlock Text="請求書番号" Style="{StaticResource MutedTextStyle}"/>
-                            <TextBlock x:Name="InvoiceNumberText"
-                                       Margin="0,8,0,0"
-                                       Text="---"
+                            <TextBlock Margin="0,8,0,0"
+                                       Text="{Binding InvoiceNumber}"
                                        Foreground="White"
                                        FontSize="24"
                                        FontWeight="SemiBold"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                                <Border x:Name="StatusBadge"
-                                        Style="{StaticResource StatusBadgeStyle}">
-                                    <TextBlock x:Name="StatusText"
-                                               Text="---"
-                                               Foreground="#E2E8F0"
+                                <Border Style="{StaticResource StatusBadgeStyle}"
+                                        Background="{Binding StatusBackground}"
+                                        BorderBrush="{Binding StatusBorderBrush}">
+                                    <TextBlock Text="{Binding StatusName}"
+                                               Foreground="{Binding StatusForeground}"
                                                FontSize="12"
                                                FontWeight="SemiBold"/>
                                 </Border>
 
-                                <Border x:Name="OverdueBadge"
-                                        Margin="10,0,0,0"
+                                <Border Margin="10,0,0,0"
                                         CornerRadius="999"
                                         Padding="12,5"
                                         BorderThickness="1"
                                         Background="#4A2C0A"
                                         BorderBrush="#92400E"
-                                        Visibility="Collapsed">
+                                        Visibility="{Binding OverdueVisibility}">
                                     <TextBlock Text="⚠ 期限超過"
                                                Foreground="#FCD34D"
                                                FontSize="12"
@@ -279,10 +272,9 @@
                                 <TextBlock Text="請求日"
                                            HorizontalAlignment="Right"
                                            Style="{StaticResource MutedTextStyle}"/>
-                                <TextBlock x:Name="InvoiceDateText"
-                                           Margin="0,6,0,0"
+                                <TextBlock Margin="0,6,0,0"
                                            HorizontalAlignment="Right"
-                                           Text="---"
+                                           Text="{Binding InvoiceDateText}"
                                            Style="{StaticResource ValueTextStyle}"/>
                             </StackPanel>
 
@@ -290,17 +282,15 @@
                                 <TextBlock Text="支払期限"
                                            HorizontalAlignment="Right"
                                            Style="{StaticResource MutedTextStyle}"/>
-                                <TextBlock x:Name="DueDateText"
-                                           Margin="0,6,0,0"
+                                <TextBlock Margin="0,6,0,0"
                                            HorizontalAlignment="Right"
-                                           Text="---"
+                                           Text="{Binding DueDateText}"
                                            Style="{StaticResource ValueTextStyle}"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- 金額情報 -->
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -313,9 +303,8 @@
                     <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}">
                         <StackPanel>
                             <TextBlock Text="請求金額" Style="{StaticResource MutedTextStyle}"/>
-                            <TextBlock x:Name="TotalAmountText"
-                                       Margin="0,10,0,0"
-                                       Text="---"
+                            <TextBlock Margin="0,10,0,0"
+                                       Text="{Binding TotalAmountText}"
                                        Foreground="White"
                                        FontSize="22"
                                        FontWeight="SemiBold"/>
@@ -325,9 +314,8 @@
                     <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
                         <StackPanel>
                             <TextBlock Text="入金済み" Style="{StaticResource MutedTextStyle}"/>
-                            <TextBlock x:Name="PaidAmountText"
-                                       Margin="0,10,0,0"
-                                       Text="---"
+                            <TextBlock Margin="0,10,0,0"
+                                       Text="{Binding PaidAmountText}"
                                        Foreground="White"
                                        FontSize="22"
                                        FontWeight="SemiBold"/>
@@ -337,9 +325,8 @@
                     <Border Grid.Column="4" Style="{StaticResource CardBorderStyle}">
                         <StackPanel>
                             <TextBlock Text="残額" Style="{StaticResource MutedTextStyle}"/>
-                            <TextBlock x:Name="RemainingAmountText"
-                                       Margin="0,10,0,0"
-                                       Text="---"
+                            <TextBlock Margin="0,10,0,0"
+                                       Text="{Binding RemainingAmountText}"
                                        Foreground="White"
                                        FontSize="22"
                                        FontWeight="SemiBold"/>
@@ -347,7 +334,6 @@
                     </Border>
                 </Grid>
 
-                <!-- 備考 -->
                 <Border Grid.Row="4" Style="{StaticResource CardBorderStyle}">
                     <StackPanel>
                         <TextBlock Text="備考" Style="{StaticResource SectionTitleStyle}"/>
@@ -357,8 +343,7 @@
                                 Background="#0B1220"
                                 BorderBrush="#233044"
                                 BorderThickness="1">
-                            <TextBlock x:Name="RemarksText"
-                                       Text="備考はありません。"
+                            <TextBlock Text="{Binding Remarks}"
                                        Foreground="#CBD5E1"
                                        FontSize="13"
                                        TextWrapping="Wrap"/>
@@ -367,14 +352,13 @@
                 </Border>
             </Grid>
 
-            <!-- フッター -->
             <Border Grid.Row="6"
                     CornerRadius="18"
                     Padding="14,12"
                     BorderBrush="#233044"
                     BorderThickness="1"
                     Background="#99101826">
-                <TextBlock Text="Invoice Detail / Member"
+                <TextBlock Text="{Binding FooterText}"
                            Foreground="#64748B"
                            FontSize="11"
                            HorizontalAlignment="Center"/>

@@ -129,7 +129,6 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- 装飾 -->
         <Ellipse Width="420"
                  Height="420"
                  HorizontalAlignment="Left"
@@ -169,7 +168,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- ヘッダー -->
             <Border Grid.Row="0"
                     CornerRadius="24"
                     Padding="24"
@@ -213,32 +211,28 @@
                                 HorizontalAlignment="Right"
                                 Background="#0B2A1E"
                                 BorderBrush="#14532D">
-                            <TextBlock x:Name="RoleBadgeText"
-                                       Text="一般会員"
+                            <TextBlock Text="{Binding RoleLabel}"
                                        Foreground="#86EFAC"
                                        FontSize="12"
                                        FontWeight="SemiBold"/>
                         </Border>
 
-                        <TextBlock x:Name="WelcomeText"
-                                   Margin="0,14,0,0"
+                        <TextBlock Margin="0,14,0,0"
                                    HorizontalAlignment="Right"
                                    Foreground="White"
                                    FontSize="18"
                                    FontWeight="SemiBold"
-                                   Text="ようこそ、会員さま"/>
+                                   Text="{Binding WelcomeMessage}"/>
 
-                        <TextBlock x:Name="SubWelcomeText"
-                                   Margin="0,4,0,0"
+                        <TextBlock Margin="0,4,0,0"
                                    HorizontalAlignment="Right"
                                    Foreground="#94A3B8"
                                    FontSize="12"
-                                   Text="ログイン情報を読み込みました。"/>
+                                   Text="{Binding SubWelcomeMessage}"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- 本文 -->
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="320"/>
@@ -246,9 +240,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- 左カラム -->
                 <StackPanel Grid.Column="0">
-                    <!-- ユーザー情報 -->
                     <Border Style="{StaticResource CardBorderStyle}">
                         <StackPanel>
                             <TextBlock Text="ログイン中の情報"
@@ -277,9 +269,8 @@
                                         <TextBlock Text="氏名"
                                                    Foreground="#94A3B8"
                                                    FontSize="11"/>
-                                        <TextBlock x:Name="NameText"
-                                                   Margin="0,6,0,0"
-                                                   Text="---"
+                                        <TextBlock Margin="0,6,0,0"
+                                                   Text="{Binding DisplayName}"
                                                    Style="{StaticResource ValueTextStyle}"/>
                                     </StackPanel>
 
@@ -287,9 +278,8 @@
                                         <TextBlock Text="メールアドレス"
                                                    Foreground="#94A3B8"
                                                    FontSize="11"/>
-                                        <TextBlock x:Name="EmailText"
-                                                   Margin="0,6,0,0"
-                                                   Text="---"
+                                        <TextBlock Margin="0,6,0,0"
+                                                   Text="{Binding DisplayEmail}"
                                                    Foreground="White"
                                                    FontSize="14"
                                                    TextWrapping="Wrap"/>
@@ -299,9 +289,8 @@
                                         <TextBlock Text="ロール"
                                                    Foreground="#94A3B8"
                                                    FontSize="11"/>
-                                        <TextBlock x:Name="RoleText"
-                                                   Margin="0,6,0,0"
-                                                   Text="一般会員"
+                                        <TextBlock Margin="0,6,0,0"
+                                                   Text="{Binding RoleLabel}"
                                                    Style="{StaticResource ValueTextStyle}"/>
                                     </StackPanel>
                                 </Grid>
@@ -324,7 +313,6 @@
                     </Border>
                 </StackPanel>
 
-                <!-- 右カラム -->
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -391,11 +379,10 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- 請求書一覧 -->
                         <Button Grid.Row="0"
                                 Grid.Column="0"
                                 Style="{StaticResource QuickActionButtonStyle}"
-                                Click="InvoicesButton_OnClick"
+                                Command="{Binding OpenInvoicesCommand}"
                                 Background="#0F172A"
                                 BorderBrush="#1D4ED8">
                             <Grid>
@@ -444,11 +431,10 @@
                             </Grid>
                         </Button>
 
-                        <!-- 未入金 -->
                         <Button Grid.Row="0"
                                 Grid.Column="2"
                                 Style="{StaticResource QuickActionButtonStyle}"
-                                Click="UnpaidButton_OnClick"
+                                Command="{Binding OpenUnpaidCommand}"
                                 Background="#0F172A"
                                 BorderBrush="#D97706">
                             <Grid>
@@ -496,12 +482,11 @@
                             </Grid>
                         </Button>
 
-                        <!-- 登録情報 -->
                         <Button Grid.Row="2"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="3"
                                 Style="{StaticResource QuickActionButtonStyle}"
-                                Click="ProfileButton_OnClick"
+                                Command="{Binding OpenProfileCommand}"
                                 Background="#0F172A"
                                 BorderBrush="#059669">
                             <Grid>
@@ -572,26 +557,24 @@
                             <Button Grid.Column="2"
                                     Style="{StaticResource GhostButtonStyle}"
                                     Content="ログイン画面へ戻る"
-                                    Click="BackToLoginButton_OnClick"/>
+                                    Command="{Binding BackToLoginCommand}"/>
 
                             <Button Grid.Column="4"
                                     Style="{StaticResource DangerButtonStyle}"
                                     Content="ログアウト"
-                                    Click="LogoutButton_OnClick"/>
+                                    Command="{Binding LogoutCommand}"/>
                         </Grid>
                     </Border>
                 </Grid>
             </Grid>
 
-            <!-- フッター -->
             <Border Grid.Row="4"
                     CornerRadius="18"
                     Padding="14,12"
                     BorderBrush="#233044"
                     BorderThickness="1"
                     Background="#99101826">
-                <TextBlock x:Name="FooterText"
-                           Text="Invoice &amp; Payment Status Dashboard (Lite) / Member Dashboard"
+                <TextBlock Text="{Binding FooterText}"
                            Foreground="#64748B"
                            FontSize="11"
                            HorizontalAlignment="Center"/>

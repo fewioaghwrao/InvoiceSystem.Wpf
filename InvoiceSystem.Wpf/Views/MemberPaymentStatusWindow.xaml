@@ -172,7 +172,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- ヘッダー -->
             <Border Grid.Row="0"
                     CornerRadius="24"
                     Padding="24"
@@ -212,32 +211,28 @@
                     <StackPanel Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <TextBlock x:Name="WelcomeText"
-                                   HorizontalAlignment="Right"
+                        <TextBlock HorizontalAlignment="Right"
                                    Foreground="White"
                                    FontSize="18"
                                    FontWeight="SemiBold"
-                                   Text="ようこそ"/>
+                                   Text="{Binding WelcomeMessage}"/>
 
-                        <TextBlock x:Name="SubWelcomeText"
-                                   Margin="0,4,0,0"
+                        <TextBlock Margin="0,4,0,0"
                                    HorizontalAlignment="Right"
                                    Foreground="#94A3B8"
                                    FontSize="12"
-                                   Text="未払い状況を表示しています。"/>
+                                   Text="{Binding SubWelcomeMessage}"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- 警告バナー -->
-            <Border x:Name="OverdueBanner"
-                    Grid.Row="2"
+            <Border Grid.Row="2"
                     CornerRadius="18"
                     Padding="16"
                     BorderBrush="#92400E"
                     BorderThickness="1"
                     Background="#4A2C0A"
-                    Visibility="Collapsed">
+                    Visibility="{Binding OverdueBannerVisibility}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="⚠"
                                FontSize="18"
@@ -256,7 +251,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- サマリー -->
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -269,9 +263,8 @@
                 <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}">
                     <StackPanel>
                         <TextBlock Text="未払い件数" Style="{StaticResource MutedTextStyle}"/>
-                        <TextBlock x:Name="UnpaidCountText"
-                                   Margin="0,10,0,0"
-                                   Text="0 件"
+                        <TextBlock Margin="0,10,0,0"
+                                   Text="{Binding UnpaidCountText}"
                                    Style="{StaticResource SummaryValueStyle}"/>
                     </StackPanel>
                 </Border>
@@ -279,9 +272,8 @@
                 <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
                     <StackPanel>
                         <TextBlock Text="未払い残額合計" Style="{StaticResource MutedTextStyle}"/>
-                        <TextBlock x:Name="RemainingTotalText"
-                                   Margin="0,10,0,0"
-                                   Text="0 円"
+                        <TextBlock Margin="0,10,0,0"
+                                   Text="{Binding RemainingTotalText}"
                                    Style="{StaticResource SummaryValueStyle}"/>
                         <TextBlock Margin="0,8,0,0"
                                    Text="※入金割当から算出しております。"
@@ -292,15 +284,13 @@
                 <Border Grid.Column="4" Style="{StaticResource CardBorderStyle}">
                     <StackPanel>
                         <TextBlock Text="期限超過" Style="{StaticResource MutedTextStyle}"/>
-                        <TextBlock x:Name="OverdueCountText"
-                                   Margin="0,10,0,0"
-                                   Text="0 件"
+                        <TextBlock Margin="0,10,0,0"
+                                   Text="{Binding OverdueCountText}"
                                    Style="{StaticResource SummaryValueStyle}"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <!-- 一覧 -->
             <Border Grid.Row="6" Style="{StaticResource CardBorderStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -317,25 +307,22 @@
 
                         <StackPanel>
                             <TextBlock Text="未払い一覧" Style="{StaticResource SectionTitleStyle}"/>
-                            <TextBlock x:Name="SummaryText"
-                                       Margin="0,8,0,0"
-                                       Text="0 件"
+                            <TextBlock Margin="0,8,0,0"
+                                       Text="{Binding SummaryText}"
                                        Style="{StaticResource MutedTextStyle}"/>
                         </StackPanel>
 
-                        <TextBlock x:Name="LoadingText"
-                                   Grid.Column="1"
+                        <TextBlock Grid.Column="1"
                                    VerticalAlignment="Center"
                                    Foreground="#7DD3FC"
                                    FontSize="12"
                                    FontWeight="SemiBold"
-                                   Text=""
-                                   Visibility="Collapsed"/>
+                                   Text="{Binding LoadingMessage}"
+                                   Visibility="{Binding LoadingVisibility}"/>
                     </Grid>
 
-                    <DataGrid x:Name="PaymentStatusDataGrid"
-                              Grid.Row="2"
-                              ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Rows}"
+                    <DataGrid Grid.Row="2"
+                              ItemsSource="{Binding Rows}"
                               FrozenColumnCount="1">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="請求書番号"
@@ -406,13 +393,15 @@
                                             <Button Content="詳細"
                                                     Width="78"
                                                     Style="{StaticResource SmallActionButtonStyle}"
-                                                    Click="DetailButton_Click"/>
+                                                    Command="{Binding DataContext.OpenDetailCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"/>
 
                                             <Button Content="PDF"
                                                     Width="78"
                                                     Margin="10,0,0,0"
                                                     Style="{StaticResource SmallActionButtonStyle}"
-                                                    Click="PdfButton_Click"/>
+                                                    Command="{Binding DataContext.OpenPdfCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -422,7 +411,6 @@
                 </Grid>
             </Border>
 
-            <!-- 下部操作 -->
             <Border Grid.Row="8" Style="{StaticResource CardBorderStyle}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -442,13 +430,13 @@
                     <Button Grid.Column="1"
                             Width="150"
                             Style="{StaticResource GhostButtonStyle}"
-                            Click="RefreshButton_Click"
+                            Command="{Binding RefreshCommand}"
                             Content="再読み込み"/>
 
                     <Button Grid.Column="3"
                             Width="180"
                             Style="{StaticResource DangerButtonStyle}"
-                            Click="BackButton_Click"
+                            Command="{Binding BackToDashboardCommand}"
                             Content="ダッシュボードへ戻る"/>
                 </Grid>
             </Border>
