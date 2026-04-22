@@ -10,7 +10,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 public sealed class MemberDashboardViewModel : ViewModelBase
 {
     private readonly object? _currentUser;
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
     private readonly InvoiceService _invoiceService;
     private readonly AccountService _accountService;
 
@@ -70,7 +70,7 @@ public sealed class MemberDashboardViewModel : ViewModelBase
 
     public MemberDashboardViewModel(
         object? currentUser,
-        AuthService authService,
+        IAuthService authService,
         InvoiceService invoiceService,
         AccountService accountService,
         Action openInvoiceList,

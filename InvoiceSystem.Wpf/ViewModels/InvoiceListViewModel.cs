@@ -10,11 +10,11 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class InvoiceListViewModel : INotifyPropertyChanged
 {
-    private readonly InvoiceService _invoiceService;
+    private readonly IInvoiceService _invoiceService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public InvoiceListViewModel(InvoiceService invoiceService)
+    public InvoiceListViewModel(IInvoiceService invoiceService)
     {
         _invoiceService = invoiceService;
 

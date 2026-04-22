@@ -13,12 +13,12 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class AdminCollectionViewModel : INotifyPropertyChanged
 {
-    private readonly InvoiceService _invoiceService;
+    private readonly IInvoiceService _invoiceService;
     private readonly long _invoiceId;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public AdminCollectionViewModel(InvoiceService invoiceService, long invoiceId)
+    public AdminCollectionViewModel(IInvoiceService invoiceService, long invoiceId)
     {
         _invoiceService = invoiceService;
         _invoiceId = invoiceId;
