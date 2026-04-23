@@ -13,7 +13,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 public sealed class MemberInvoiceDetailViewModel : ViewModelBase
 {
     private readonly long _invoiceId;
-    private readonly InvoiceService _invoiceService;
+    private readonly IInvoiceService _invoiceService;
     private readonly Action _openInvoiceList;
 
     private string _loadingMessage = string.Empty;
@@ -152,7 +152,7 @@ public sealed class MemberInvoiceDetailViewModel : ViewModelBase
 
     public MemberInvoiceDetailViewModel(
         long invoiceId,
-        InvoiceService invoiceService,
+        IInvoiceService invoiceService,
         Action openInvoiceList)
     {
         _invoiceId = invoiceId;

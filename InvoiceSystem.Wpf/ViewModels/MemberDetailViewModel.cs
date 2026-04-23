@@ -11,7 +11,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public sealed class MemberDetailViewModel : ViewModelBase
 {
-    private readonly MemberService _memberService;
+    private readonly IMemberService _memberService;
     private readonly int _memberId;
     private readonly Window _window;
 
@@ -30,7 +30,7 @@ public sealed class MemberDetailViewModel : ViewModelBase
     private bool _isDisabling;
     private string? _errorMessage;
 
-    public MemberDetailViewModel(MemberService memberService, int memberId, Window window)
+    public MemberDetailViewModel(IMemberService memberService, int memberId, Window window)
     {
         _memberService = memberService;
         _memberId = memberId;

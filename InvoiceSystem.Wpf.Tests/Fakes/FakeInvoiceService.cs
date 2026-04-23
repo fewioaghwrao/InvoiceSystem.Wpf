@@ -173,4 +173,82 @@ public sealed class FakeInvoiceService : IInvoiceService
 
         return Task.FromResult(SearchInvoicesResultToReturn);
     }
+
+    // =========================
+    // MemberInvoiceDetailViewModel 用
+    // =========================
+
+    public InvoiceDetailDto? MemberInvoiceDetailToReturn { get; set; }
+    public PdfDownloadResult? MemberInvoicePdfToReturn { get; set; }
+
+    public Exception? ExceptionToThrowOnGetMemberInvoiceDetail { get; set; }
+    public Exception? ExceptionToThrowOnGetMemberInvoicePdf { get; set; }
+
+    public long LastInvoiceIdForMemberDetail { get; private set; }
+    public long LastInvoiceIdForMemberPdf { get; private set; }
+
+    public Task<InvoiceDetailDto> GetMemberInvoiceDetailAsync(long invoiceId)
+    {
+        LastInvoiceIdForMemberDetail = invoiceId;
+
+        if (ExceptionToThrowOnGetMemberInvoiceDetail != null)
+        {
+            return Task.FromException<InvoiceDetailDto>(ExceptionToThrowOnGetMemberInvoiceDetail);
+        }
+
+        return Task.FromResult(MemberInvoiceDetailToReturn ?? new InvoiceDetailDto());
+    }
+
+    public Task<PdfDownloadResult> GetMemberInvoicePdfAsync(long invoiceId)
+    {
+        LastInvoiceIdForMemberPdf = invoiceId;
+
+        if (ExceptionToThrowOnGetMemberInvoicePdf != null)
+        {
+            return Task.FromException<PdfDownloadResult>(ExceptionToThrowOnGetMemberInvoicePdf);
+        }
+
+        return Task.FromResult(MemberInvoicePdfToReturn ?? new PdfDownloadResult
+        {
+            Content = new byte[] { 1, 2, 3 },
+            FileName = "test.pdf",
+            ContentType = "application/pdf"
+        });
+    }
+
+    // =========================
+    // MemberInvoiceListViewModel 用
+    // =========================
+    public AccountInvoiceListDto? MemberInvoicesToReturn { get; set; }
+    public Exception? ExceptionToThrowOnGetMemberInvoices { get; set; }
+
+    public int LastMemberInvoicesYear { get; private set; }
+    public string? LastMemberInvoicesMonth { get; private set; }
+    public string? LastMemberInvoicesStatus { get; private set; }
+    public string? LastMemberInvoicesKeyword { get; private set; }
+    public int LastMemberInvoicesPage { get; private set; }
+    public int LastMemberInvoicesPageSize { get; private set; }
+
+    public Task<AccountInvoiceListDto> GetMemberInvoicesAsync(
+        int year,
+        string month,
+        string status,
+        string q,
+        int page,
+        int pageSize = 10)
+    {
+        LastMemberInvoicesYear = year;
+        LastMemberInvoicesMonth = month;
+        LastMemberInvoicesStatus = status;
+        LastMemberInvoicesKeyword = q;
+        LastMemberInvoicesPage = page;
+        LastMemberInvoicesPageSize = pageSize;
+
+        if (ExceptionToThrowOnGetMemberInvoices != null)
+        {
+            return Task.FromException<AccountInvoiceListDto>(ExceptionToThrowOnGetMemberInvoices);
+        }
+
+        return Task.FromResult(MemberInvoicesToReturn ?? new AccountInvoiceListDto());
+    }
 }

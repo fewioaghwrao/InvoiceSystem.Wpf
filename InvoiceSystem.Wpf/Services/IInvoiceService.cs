@@ -16,4 +16,15 @@ public interface IInvoiceService
     Task UpdateAdminInvoiceAsync(long invoiceId, InvoiceUpsertRequestDto request);
 
     Task<List<InvoiceListItemDto>> SearchInvoicesAsync(InvoiceSearchRequest request);
+
+    Task<InvoiceDetailDto> GetMemberInvoiceDetailAsync(long invoiceId);
+    Task<PdfDownloadResult> GetMemberInvoicePdfAsync(long invoiceId);
+
+    Task<AccountInvoiceListDto> GetMemberInvoicesAsync(
+    int year,
+    string month,
+    string status,
+    string q,
+    int page,
+    int pageSize = 10);
 }
