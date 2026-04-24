@@ -111,72 +111,109 @@
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         </Style>
     </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#020617" Offset="0.0"/>
+                <GradientStop Color="#0F172A" Offset="0.5"/>
+                <GradientStop Color="#111827" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Ellipse Width="420"
+                 Height="420"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Margin="-120,-120,0,0"
+                 Opacity="0.18"
+                 IsHitTestVisible="False">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#38BDF8" Offset="0"/>
+                    <GradientStop Color="#0038BDF8" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
 
-        <!-- Header -->
-        <Border Grid.Row="0"
+        <Ellipse Width="420"
+                 Height="420"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Bottom"
+                 Margin="0,0,-120,-120"
+                 Opacity="0.15"
+                 IsHitTestVisible="False">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#6366F1" Offset="0"/>
+                    <GradientStop Color="#006366F1" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0"
                 CornerRadius="20"
                 Padding="20"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 Background="#CC0F172A">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding InvoiceNumber}"
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding InvoiceNumber}"
                                    Foreground="White"
                                    FontSize="24"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
-                        <Border Margin="12,0,0,0"
+                            <Border Margin="12,0,0,0"
                                 Background="{Binding StatusBackground}"
                                 BorderBrush="{Binding StatusBorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="999"
                                 Padding="12,5"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="{Binding StatusName}"
+                                <TextBlock Text="{Binding StatusName}"
                                        Foreground="{Binding StatusForeground}"
                                        FontSize="11"
                                        FontWeight="SemiBold"/>
-                        </Border>
-                    </StackPanel>
+                            </Border>
+                        </StackPanel>
 
-                    <TextBlock Margin="0,8,0,0"
+                        <TextBlock Margin="0,8,0,0"
                                Text="請求情報・明細・入金割当・督促履歴をまとめて確認できます。"
                                Foreground="#94A3B8"
                                FontSize="13"/>
-                </StackPanel>
+                    </StackPanel>
 
-                <StackPanel Grid.Column="1"
+                    <StackPanel Grid.Column="1"
             Orientation="Horizontal"
             VerticalAlignment="Center">
-                    <Button Content="再読込"
+                        <Button Content="再読込"
             Style="{StaticResource PrimaryButtonStyle}"
             Click="ReloadButton_OnClick"/>
-                    <Button Content="PDF表示"
+                        <Button Content="PDF表示"
             Style="{StaticResource SecondaryButtonStyle}"
             Click="OpenPdfButton_OnClick"/>
-                    <Button Content="編集"
+                        <Button Content="編集"
             Style="{StaticResource SecondaryButtonStyle}"
             Click="EditButton_OnClick"/>
 
-                    <Button Content="削除"
+                        <Button Content="削除"
             Height="36"
             Padding="16,0"
             Foreground="#94A3B8"
@@ -189,340 +226,341 @@
             IsEnabled="False"
             ToolTip="削除機能は現在無効です"/>
 
-                    <Button Content="閉じる"
+                        <Button Content="閉じる"
             Style="{StaticResource SecondaryButtonStyle}"
             Margin="0"
             Click="CloseButton_OnClick"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <!-- Error -->
-        <Border Grid.Row="2"
+            <!-- Error -->
+            <Border Grid.Row="2"
                 Background="#3F1D1D"
                 BorderBrush="#7F1D1D"
                 BorderThickness="1"
                 CornerRadius="14"
                 Padding="14"
                 Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBlock Text="{Binding ErrorMessage}"
+                <TextBlock Text="{Binding ErrorMessage}"
                        Foreground="#FCA5A5"
                        TextWrapping="Wrap"/>
-        </Border>
+            </Border>
 
-        <!-- KPI -->
-        <Border Grid.Row="4"
+            <!-- KPI -->
+            <Border Grid.Row="4"
                 CornerRadius="18"
                 Padding="16"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 Background="#CC0F172A">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
+                    <Border Grid.Column="0"
                         CornerRadius="14"
                         Padding="16"
                         Background="#0B1220"
                         BorderBrush="#1E293B"
                         BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="請求金額" Style="{StaticResource LabelStyle}"/>
-                        <TextBlock Margin="0,8,0,0"
+                        <StackPanel>
+                            <TextBlock Text="請求金額" Style="{StaticResource LabelStyle}"/>
+                            <TextBlock Margin="0,8,0,0"
                                    Text="{Binding TotalAmountText}"
                                    Foreground="White"
                                    FontSize="24"
                                    FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Border>
+                        </StackPanel>
+                    </Border>
 
-                <Border Grid.Column="2"
+                    <Border Grid.Column="2"
                         CornerRadius="14"
                         Padding="16"
                         Background="#0B1220"
                         BorderBrush="#1E293B"
                         BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="入金済み" Style="{StaticResource LabelStyle}"/>
-                        <TextBlock Margin="0,8,0,0"
+                        <StackPanel>
+                            <TextBlock Text="入金済み" Style="{StaticResource LabelStyle}"/>
+                            <TextBlock Margin="0,8,0,0"
                                    Text="{Binding PaidAmountText}"
                                    Foreground="#86EFAC"
                                    FontSize="24"
                                    FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Border>
+                        </StackPanel>
+                    </Border>
 
-                <Border Grid.Column="4"
+                    <Border Grid.Column="4"
                         CornerRadius="14"
                         Padding="16"
                         Background="#0B1220"
                         BorderBrush="#1E293B"
                         BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="残額" Style="{StaticResource LabelStyle}"/>
-                        <TextBlock Margin="0,8,0,0"
+                        <StackPanel>
+                            <TextBlock Text="残額" Style="{StaticResource LabelStyle}"/>
+                            <TextBlock Margin="0,8,0,0"
                                    Text="{Binding RemainingAmountText}"
                                    Foreground="#FCD34D"
                                    FontSize="24"
                                    FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
 
-        <!-- Main -->
-        <Grid Grid.Row="6">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="360"/>
-                <ColumnDefinition Width="16"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <!-- Main -->
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="360"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Left -->
-            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <Border CornerRadius="18"
+                <!-- Left -->
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border CornerRadius="18"
                             Padding="16"
                             BorderBrush="#1E293B"
                             BorderThickness="1"
                             Background="#CC0F172A">
-                        <StackPanel>
-                            <TextBlock Text="基本情報" Style="{StaticResource CardTitleStyle}"/>
+                            <StackPanel>
+                                <TextBlock Text="基本情報" Style="{StaticResource CardTitleStyle}"/>
 
-                            <Grid Margin="0,14,0,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="12"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="12"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="12"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="12"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="12"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+                                <Grid Margin="0,14,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
-                                <StackPanel Grid.Row="0">
-                                    <TextBlock Text="請求番号" Style="{StaticResource LabelStyle}"/>
-                                    <TextBlock Text="{Binding InvoiceNumber}" Style="{StaticResource ValueStyle}"/>
-                                </StackPanel>
+                                    <StackPanel Grid.Row="0">
+                                        <TextBlock Text="請求番号" Style="{StaticResource LabelStyle}"/>
+                                        <TextBlock Text="{Binding InvoiceNumber}" Style="{StaticResource ValueStyle}"/>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Row="2">
-                                    <TextBlock Text="会員名" Style="{StaticResource LabelStyle}"/>
-                                    <TextBlock Text="{Binding MemberName}" Style="{StaticResource ValueStyle}"/>
-                                </StackPanel>
+                                    <StackPanel Grid.Row="2">
+                                        <TextBlock Text="会員名" Style="{StaticResource LabelStyle}"/>
+                                        <TextBlock Text="{Binding MemberName}" Style="{StaticResource ValueStyle}"/>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Row="4">
-                                    <TextBlock Text="請求日" Style="{StaticResource LabelStyle}"/>
-                                    <TextBlock Text="{Binding InvoiceDate, StringFormat=yyyy/MM/dd}" Style="{StaticResource ValueStyle}"/>
-                                </StackPanel>
+                                    <StackPanel Grid.Row="4">
+                                        <TextBlock Text="請求日" Style="{StaticResource LabelStyle}"/>
+                                        <TextBlock Text="{Binding InvoiceDate, StringFormat=yyyy/MM/dd}" Style="{StaticResource ValueStyle}"/>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Row="6">
-                                    <TextBlock Text="支払期限" Style="{StaticResource LabelStyle}"/>
-                                    <TextBlock Text="{Binding DueDate, StringFormat=yyyy/MM/dd}" Style="{StaticResource ValueStyle}"/>
-                                </StackPanel>
+                                    <StackPanel Grid.Row="6">
+                                        <TextBlock Text="支払期限" Style="{StaticResource LabelStyle}"/>
+                                        <TextBlock Text="{Binding DueDate, StringFormat=yyyy/MM/dd}" Style="{StaticResource ValueStyle}"/>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Row="8">
-                                    <TextBlock Text="作成日時" Style="{StaticResource LabelStyle}"/>
-                                    <TextBlock Text="{Binding CreatedAt, StringFormat=yyyy/MM/dd HH:mm}" Style="{StaticResource ValueStyle}"/>
-                                </StackPanel>
+                                    <StackPanel Grid.Row="8">
+                                        <TextBlock Text="作成日時" Style="{StaticResource LabelStyle}"/>
+                                        <TextBlock Text="{Binding CreatedAt, StringFormat=yyyy/MM/dd HH:mm}" Style="{StaticResource ValueStyle}"/>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Row="10">
-                                    <TextBlock Text="備考" Style="{StaticResource LabelStyle}"/>
-                                    <Border Margin="0,6,0,0"
+                                    <StackPanel Grid.Row="10">
+                                        <TextBlock Text="備考" Style="{StaticResource LabelStyle}"/>
+                                        <Border Margin="0,6,0,0"
                                             Padding="10"
                                             CornerRadius="10"
                                             Background="#0B1220"
                                             BorderBrush="#1E293B"
                                             BorderThickness="1">
-                                        <TextBlock Text="{Binding Remarks}"
+                                            <TextBlock Text="{Binding Remarks}"
                                                    Foreground="#CBD5E1"
                                                    TextWrapping="Wrap"/>
-                                    </Border>
-                                </StackPanel>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
 
-                    <Border Margin="0,16,0,0"
+                        <Border Margin="0,16,0,0"
                             CornerRadius="18"
                             Padding="16"
                             BorderBrush="#1E293B"
                             BorderThickness="1"
                             Background="#CC0F172A">
-                        <StackPanel>
-                            <TextBlock Text="督促履歴" Style="{StaticResource CardTitleStyle}"/>
+                            <StackPanel>
+                                <TextBlock Text="督促履歴" Style="{StaticResource CardTitleStyle}"/>
 
-                            <ItemsControl Margin="0,14,0,0"
+                                <ItemsControl Margin="0,14,0,0"
                                           ItemsSource="{Binding Reminders}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Margin="0,0,0,10"
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,10"
                                                 Padding="12"
                                                 CornerRadius="12"
                                                 Background="#0B1220"
                                                 BorderBrush="#1E293B"
                                                 BorderThickness="1">
-                                            <StackPanel>
-                                                <TextBlock Foreground="#E2E8F0"
+                                                <StackPanel>
+                                                    <TextBlock Foreground="#E2E8F0"
                                                            FontWeight="SemiBold"
                                                            Text="{Binding RemindedAt, StringFormat=yyyy/MM/dd HH:mm}"/>
-                                                <TextBlock Margin="0,4,0,0"
+                                                    <TextBlock Margin="0,4,0,0"
                                                            Foreground="#7DD3FC"
                                                            Text="{Binding Method}"/>
-                                                <TextBlock Margin="0,6,0,0"
+                                                    <TextBlock Margin="0,6,0,0"
                                                            Foreground="#CBD5E1"
                                                            Text="{Binding Note}"
                                                            TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                            <TextBlock Margin="0,12,0,0"
+                                <TextBlock Margin="0,12,0,0"
                                        Foreground="#94A3B8"
                                        Text="督促履歴がありません。">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Reminders.Count}" Value="0">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </ScrollViewer>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Reminders.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
 
-            <!-- Right -->
-            <!-- Right -->
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="16"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <!-- Right -->
+                <!-- Right -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <!-- 請求明細 -->
-                <Border Grid.Row="0"
+                    <!-- 請求明細 -->
+                    <Border Grid.Row="0"
             CornerRadius="18"
             Padding="16"
             BorderBrush="#1E293B"
             BorderThickness="1"
             Background="#CC0F172A">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="12"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <TextBlock Text="請求明細"
+                            <TextBlock Text="請求明細"
                        Style="{StaticResource CardTitleStyle}"/>
 
-                        <DataGrid Grid.Row="2"
+                            <DataGrid Grid.Row="2"
                       ItemsSource="{Binding Lines}"
                       Style="{StaticResource DataGridStyle}"
                       ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                       RowStyle="{StaticResource DataGridRowStyle}"
                       CellStyle="{StaticResource DataGridCellStyle}"
                       Height="260">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="No"
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="No"
                                         Binding="{Binding LineNo}"
                                         Width="70"/>
-                                <DataGridTextColumn Header="項目"
+                                    <DataGridTextColumn Header="項目"
                                         Binding="{Binding Name}"
                                         Width="*"/>
-                                <DataGridTextColumn Header="数量"
+                                    <DataGridTextColumn Header="数量"
                                         Binding="{Binding Qty, StringFormat={}{0:N0}}"
                                         Width="120"/>
-                                <DataGridTextColumn Header="単価"
+                                    <DataGridTextColumn Header="単価"
                                         Binding="{Binding UnitPrice, StringFormat={}{0:C0}}"
                                         Width="140"/>
-                                <DataGridTextColumn Header="金額"
+                                    <DataGridTextColumn Header="金額"
                                         Binding="{Binding Amount, StringFormat={}{0:C0}}"
                                         Width="140"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </Border>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
 
-                <!-- 入金履歴 -->
-                <Grid Grid.Row="2">
-                    <Border CornerRadius="18"
+                    <!-- 入金履歴 -->
+                    <Grid Grid.Row="2">
+                        <Border CornerRadius="18"
                 Padding="16"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 Background="#CC0F172A">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="12"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Text="入金履歴（割当）"
+                                <TextBlock Text="入金履歴（割当）"
                            Style="{StaticResource CardTitleStyle}"/>
 
-                            <DataGrid Grid.Row="2"
+                                <DataGrid Grid.Row="2"
                           ItemsSource="{Binding Allocations}"
                           Style="{StaticResource DataGridStyle}"
                           ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                           RowStyle="{StaticResource DataGridRowStyle}"
                           CellStyle="{StaticResource DataGridCellStyle}"
                           MinHeight="320">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="入金日"
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="入金日"
                                             Binding="{Binding PaymentDate, StringFormat=yyyy/MM/dd}"
                                             Width="120"/>
-                                    <DataGridTextColumn Header="方法"
+                                        <DataGridTextColumn Header="方法"
                                             Binding="{Binding Method}"
                                             Width="120"/>
-                                    <DataGridTextColumn Header="名義"
+                                        <DataGridTextColumn Header="名義"
                                             Binding="{Binding PayerName}"
                                             Width="*"/>
-                                    <DataGridTextColumn Header="取込ID"
+                                        <DataGridTextColumn Header="取込ID"
                                             Binding="{Binding ImportBatchId}"
                                             Width="120"/>
-                                    <DataGridTextColumn Header="割当額"
+                                        <DataGridTextColumn Header="割当額"
                                             Binding="{Binding AllocatedAmount, StringFormat={}{0:C0}}"
                                             Width="140"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </Grid>
-                    </Border>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
 
-                    <!-- 読み込み中オーバーレイ -->
-                    <Border CornerRadius="18"
+                        <!-- 読み込み中オーバーレイ -->
+                        <Border CornerRadius="18"
                 Padding="16"
                 Background="#AA020617"
                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <StackPanel Orientation="Horizontal"
+                            <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                            <TextBlock Text="⏳"
+                                <TextBlock Text="⏳"
                            Margin="0,0,8,0"
                            Foreground="#7DD3FC"
                            FontSize="14"/>
-                            <TextBlock Text="請求書詳細を読み込み中です..."
+                                <TextBlock Text="請求書詳細を読み込み中です..."
                            Foreground="#CBD5E1"
                            VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

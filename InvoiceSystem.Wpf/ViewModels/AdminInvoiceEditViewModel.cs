@@ -10,14 +10,14 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class AdminInvoiceEditViewModel : INotifyPropertyChanged
 {
-    private readonly InvoiceService _invoiceService;
+    private readonly IInvoiceService _invoiceService;
     private readonly InvoiceEditorMode _mode;
     private readonly long? _invoiceId;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public AdminInvoiceEditViewModel(
-        InvoiceService invoiceService,
+        IInvoiceService invoiceService,
         InvoiceEditorMode mode,
         long? invoiceId = null)
     {

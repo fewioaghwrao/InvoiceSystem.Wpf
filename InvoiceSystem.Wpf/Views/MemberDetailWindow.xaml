@@ -70,171 +70,209 @@
             <Setter Property="Margin" Value="0" />
         </Style>
     </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#020617" Offset="0.0"/>
+                <GradientStop Color="#0F172A" Offset="0.5"/>
+                <GradientStop Color="#111827" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="16"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Ellipse Width="420"
+                 Height="420"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Margin="-120,-120,0,0"
+                 Opacity="0.18"
+                 IsHitTestVisible="False">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#38BDF8" Offset="0"/>
+                    <GradientStop Color="#0038BDF8" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
 
-        <Border Grid.Row="0"
+        <Ellipse Width="420"
+                 Height="420"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Bottom"
+                 Margin="0,0,-120,-120"
+                 Opacity="0.15"
+                 IsHitTestVisible="False">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#6366F1" Offset="0"/>
+                    <GradientStop Color="#006366F1" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
                 Background="#0F172A"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 CornerRadius="16"
                 Padding="20">
-            <StackPanel>
-                <TextBlock Text="会員詳細（編集）"
+                <StackPanel>
+                    <TextBlock Text="会員詳細（編集）"
                            FontSize="22"
                            FontWeight="SemiBold"
                            Foreground="White"/>
-                <TextBlock Margin="0,6,0,0"
+                    <TextBlock Margin="0,6,0,0"
                            Text="管理者が顧客情報を編集します（メール認証なし）。"
                            Foreground="#94A3B8"
                            FontSize="12"/>
-            </StackPanel>
-        </Border>
+                </StackPanel>
+            </Border>
 
-        <Border Grid.Row="2"
+            <Border Grid.Row="2"
                 Background="#0F172A"
                 BorderBrush="#1E293B"
                 BorderThickness="1"
                 CornerRadius="16"
                 Padding="20">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="16"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="16"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="16"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="名前" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource InputStyle}"
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="名前" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource InputStyle}"
                                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="メール" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource InputStyle}"
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="メール" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource InputStyle}"
                                  Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBlock Margin="0,6,0,0"
+                            <TextBlock Margin="0,6,0,0"
                                    FontSize="11"
                                    Foreground="#64748B"
                                    Text="※管理画面編集のためメール認証は行いません（デモ用）。"/>
-                    </StackPanel>
-                </Grid>
+                        </StackPanel>
+                    </Grid>
 
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="16"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="郵便番号" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource InputStyle}"
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="郵便番号" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource InputStyle}"
                                  Text="{Binding PostalCode, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="住所" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource InputStyle}"
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="住所" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource InputStyle}"
                                  Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
-                </Grid>
+                        </StackPanel>
+                    </Grid>
 
-                <Grid Grid.Row="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="16"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="電話番号" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource InputStyle}"
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="電話番号" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource InputStyle}"
                                  Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="12"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0">
-                            <TextBlock Text="ロール" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBox Style="{StaticResource ReadOnlyInputStyle}"
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="ロール" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBox Style="{StaticResource ReadOnlyInputStyle}"
                                      Text="{Binding RoleText, Mode=OneWay}"/>
-                            <TextBlock Margin="0,6,0,0"
+                                <TextBlock Margin="0,6,0,0"
                                        FontSize="11"
                                        Foreground="#64748B"
                                        Text="※ロールは固定です。"/>
-                        </StackPanel>
+                            </StackPanel>
 
-                        <StackPanel Grid.Row="2">
-                            <TextBlock Text="状態" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBox Style="{StaticResource ReadOnlyInputStyle}"
+                            <StackPanel Grid.Row="2">
+                                <TextBlock Text="状態" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBox Style="{StaticResource ReadOnlyInputStyle}"
                                      Text="{Binding StatusText, Mode=OneWay}"/>
-                            <TextBlock Margin="0,6,0,0"
+                                <TextBlock Margin="0,6,0,0"
                                        FontSize="11"
                                        Foreground="#64748B"
                                        Text="※状態変更は退会（無効化）操作で行います。"/>
-                        </StackPanel>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-        </Border>
+            </Border>
 
-        <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0">
-                <Border Background="#3F1D1D"
+                <StackPanel Grid.Column="0">
+                    <Border Background="#3F1D1D"
                         BorderBrush="#7F1D1D"
                         BorderThickness="1"
                         CornerRadius="8"
                         Padding="12"
                         Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Text="{Binding ErrorMessage}"
+                        <TextBlock Text="{Binding ErrorMessage}"
                                Foreground="#FCA5A5"
                                TextWrapping="Wrap"/>
-                </Border>
-            </StackPanel>
+                    </Border>
+                </StackPanel>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <Button Content="戻る"
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="戻る"
                         Margin="0,0,8,0"
                         Style="{StaticResource SubButtonStyle}"
                         Command="{Binding CloseCommand}"/>
 
-                <Button Content="退会（無効化）"
+                    <Button Content="退会（無効化）"
                         Margin="0,0,8,0"
                         Style="{StaticResource DangerButtonStyle}"
                         Command="{Binding DisableCommand}"/>
 
-                <Button Content="保存"
+                    <Button Content="保存"
                         Style="{StaticResource PrimaryButtonStyle}"
                         Command="{Binding SaveCommand}"/>
-            </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

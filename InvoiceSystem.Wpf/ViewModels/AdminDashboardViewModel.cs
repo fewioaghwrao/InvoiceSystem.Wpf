@@ -18,11 +18,11 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class AdminDashboardViewModel : INotifyPropertyChanged
 {
-    private readonly AdminService _adminService;
+    private readonly IAdminService _adminService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public AdminDashboardViewModel(AdminService adminService, CurrentUser? currentUser)
+    public AdminDashboardViewModel(IAdminService adminService, CurrentUser? currentUser)
     {
         _adminService = adminService;
         CurrentUser = currentUser;

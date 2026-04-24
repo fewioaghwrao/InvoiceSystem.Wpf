@@ -10,7 +10,7 @@ using System.Web;
 
 namespace InvoiceSystem.Wpf.Services;
 
-public class MemberService
+public class MemberService : IMemberService
 {
     private readonly HttpClient _httpClient;
 

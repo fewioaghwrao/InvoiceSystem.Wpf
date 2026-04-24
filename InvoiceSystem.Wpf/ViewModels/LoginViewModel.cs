@@ -12,7 +12,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class LoginViewModel : INotifyPropertyChanged
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
     private string _email = "";
     private string _password = "";
@@ -20,10 +20,9 @@ public class LoginViewModel : INotifyPropertyChanged
     private bool _isBusy;
     private CurrentUser? _currentUser;
 
-    public LoginViewModel(AuthService authService)
+    public LoginViewModel(IAuthService authService)
     {
         _authService = authService;
-
         LoginCommand = new RelayCommand(async _ => await LoginAsync(), _ => CanLogin());
     }
 

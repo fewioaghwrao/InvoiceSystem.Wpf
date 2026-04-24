@@ -95,6 +95,28 @@ public partial class PaymentDetailWindow : Window
         _viewModel.ApplyCandidateToSelectedRow();
     }
 
+    private bool ShowConfirmDialog(
+        string title,
+        string message,
+        string confirmText,
+        ConfirmDialogWindow.DialogVisualType visualType = ConfirmDialogWindow.DialogVisualType.Default,
+        string? subMessage = null)
+    {
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage)
+        {
+            Owner = this
+        };
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
+    }
+
     private async void SaveButton_OnClick(object sender, RoutedEventArgs e)
     {
         try
@@ -110,13 +132,14 @@ public partial class PaymentDetailWindow : Window
                 return;
             }
 
-            var ok = MessageBox.Show(
-                "割当内容を保存します。よろしいですか？",
-                "割当保存確認",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            var confirmed = ShowConfirmDialog(
+                title: "割当保存確認",
+                message: "入金割当の内容を保存します。よろしいですか？",
+                confirmText: "保存する",
+                visualType: ConfirmDialogWindow.DialogVisualType.SaveConfirm,
+                subMessage: "保存後は現在の割当内容が反映されます。");
 
-            if (ok != MessageBoxResult.Yes)
+            if (!confirmed)
                 return;
 
             await _viewModel.SaveAsync();

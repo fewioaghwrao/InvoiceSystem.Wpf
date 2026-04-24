@@ -172,21 +172,20 @@
                     <StackPanel Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <TextBlock x:Name="LoadingText"
-                                   HorizontalAlignment="Right"
+                        <TextBlock HorizontalAlignment="Right"
                                    Foreground="#7DD3FC"
                                    FontSize="12"
                                    FontWeight="SemiBold"
-                                   Text=""
-                                   Visibility="Collapsed"/>
+                                   Text="{Binding LoadingMessage}"
+                                   Visibility="{Binding LoadingVisibility}"/>
 
-                        <TextBlock x:Name="ErrorText"
-                                   Margin="0,10,0,0"
+                        <TextBlock Margin="0,10,0,0"
                                    HorizontalAlignment="Right"
                                    Foreground="#FDA4AF"
                                    FontSize="12"
                                    TextWrapping="Wrap"
-                                   Width="320"/>
+                                   Width="320"
+                                   Text="{Binding ErrorMessage}"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -224,12 +223,14 @@
 
                         <StackPanel Grid.Row="0" Grid.Column="0">
                             <TextBlock Text="氏名 *" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="NameTextBox" Style="{StaticResource DarkTextBoxStyle}"/>
+                            <TextBox Style="{StaticResource DarkTextBoxStyle}"
+                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="0" Grid.Column="2">
                             <TextBlock Text="メールアドレス *" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="EmailTextBox" Style="{StaticResource DarkTextBoxStyle}"/>
+                            <TextBox Style="{StaticResource DarkTextBoxStyle}"
+                                     Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Margin="0,6,0,0"
                                        Text="※ Lite版のため、変更確認メールは省略しています。"
                                        Style="{StaticResource MutedTextStyle}"/>
@@ -237,18 +238,20 @@
 
                         <StackPanel Grid.Row="2" Grid.Column="0">
                             <TextBlock Text="電話番号" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="PhoneTextBox" Style="{StaticResource DarkTextBoxStyle}"/>
+                            <TextBox Style="{StaticResource DarkTextBoxStyle}"
+                                     Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Grid.Column="2">
                             <TextBlock Text="郵便番号" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="PostalCodeTextBox" Style="{StaticResource DarkTextBoxStyle}"/>
+                            <TextBox Style="{StaticResource DarkTextBoxStyle}"
+                                     Text="{Binding PostalCode, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
                             <TextBlock Text="住所" Style="{StaticResource FieldLabelStyle}"/>
-                            <TextBox x:Name="AddressTextBox"
-                                     Style="{StaticResource DarkTextBoxStyle}"/>
+                            <TextBox Style="{StaticResource DarkTextBoxStyle}"
+                                     Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Grid>
 
@@ -258,18 +261,17 @@
                             BorderThickness="1"
                             CornerRadius="14"
                             Padding="14"
-                            Visibility="Collapsed"
-                            x:Name="EmailChangedNotice">
+                            Visibility="{Binding EmailChangedNoticeVisibility}">
                         <StackPanel>
                             <TextBlock Text="メールアドレスが変更されています"
                                        Foreground="#FCA5A5"
                                        FontWeight="SemiBold"
                                        FontSize="12"/>
-                            <TextBlock x:Name="EmailChangedText"
-                                       Margin="0,6,0,0"
+                            <TextBlock Margin="0,6,0,0"
                                        Foreground="#FECACA"
                                        FontSize="12"
-                                       TextWrapping="Wrap"/>
+                                       TextWrapping="Wrap"
+                                       Text="{Binding EmailChangedText}"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -286,24 +288,22 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="WithdrawButton"
-                            Grid.Column="1"
+                    <Button Grid.Column="1"
                             Width="130"
                             Style="{StaticResource DangerButtonStyle}"
-                            Click="WithdrawButton_Click"
+                            Command="{Binding WithdrawCommand}"
                             Content="退会する"/>
 
                     <Button Grid.Column="3"
                             Width="120"
                             Style="{StaticResource GhostButtonStyle}"
-                            Click="BackButton_Click"
+                            Command="{Binding BackCommand}"
                             Content="戻る"/>
 
-                    <Button x:Name="SaveButton"
-                            Grid.Column="5"
+                    <Button Grid.Column="5"
                             Width="120"
                             Style="{StaticResource PrimaryButtonStyle}"
-                            Click="SaveButton_Click"
+                            Command="{Binding SaveCommand}"
                             Content="保存"/>
                 </Grid>
             </Border>

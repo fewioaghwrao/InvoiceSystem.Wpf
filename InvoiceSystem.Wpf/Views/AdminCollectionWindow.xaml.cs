@@ -30,6 +30,28 @@ public partial class AdminCollectionWindow : Window
         await LoadSafelyAsync();
     }
 
+    private bool ShowConfirmDialog(
+        string title,
+        string message,
+        string confirmText,
+        ConfirmDialogWindow.DialogVisualType visualType = ConfirmDialogWindow.DialogVisualType.Default,
+        string? subMessage = null)
+    {
+        var dialog = new ConfirmDialogWindow(
+            title: title,
+            message: message,
+            confirmText: confirmText,
+            cancelText: "キャンセル",
+            visualType: visualType,
+            subMessage: subMessage)
+        {
+            Owner = this
+        };
+
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
+    }
+
     private void CopyBodyButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(_viewModel.BodyPreview))
@@ -39,6 +61,18 @@ public partial class AdminCollectionWindow : Window
                 "本文コピー",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
+            return;
+        }
+
+        var confirmed = ShowConfirmDialog(
+            title: "催促本文コピー",
+            message: "催促本文をクリップボードにコピーしますか？",
+            confirmText: "コピーする",
+            visualType: ConfirmDialogWindow.DialogVisualType.Default,
+            subMessage: "コピー後はメール文面やメモへ貼り付けて利用できます。");
+
+        if (!confirmed)
+        {
             return;
         }
 
@@ -74,22 +108,21 @@ public partial class AdminCollectionWindow : Window
             return;
         }
 
-        var message =
-            "催促を実施済みとして記録します。よろしいですか？" +
-            Environment.NewLine + Environment.NewLine +
-            $"請求書：{_viewModel.InvoiceNumber}" + Environment.NewLine +
-            $"チャネル：{_viewModel.SelectedChannelLabel}" + Environment.NewLine +
-            $"トーン：{_viewModel.SelectedToneLabel}" + Environment.NewLine +
-            $"次回アクション日：{_viewModel.NextActionDateTextForDialog}" + Environment.NewLine +
+        var detailMessage =
+            $"請求書：{_viewModel.InvoiceNumber}{Environment.NewLine}" +
+            $"チャネル：{_viewModel.SelectedChannelLabel}{Environment.NewLine}" +
+            $"トーン：{_viewModel.SelectedToneLabel}{Environment.NewLine}" +
+            $"次回アクション日：{_viewModel.NextActionDateTextForDialog}{Environment.NewLine}" +
             $"未回収残額：{_viewModel.RemainingText}";
 
-        var result = MessageBox.Show(
-            message,
-            "催促記録確認",
-            MessageBoxButton.OKCancel,
-            MessageBoxImage.Question);
+        var confirmed = ShowConfirmDialog(
+            title: "催促記録確認",
+            message: "催促を実施済みとして記録します。よろしいですか？",
+            confirmText: "記録する",
+            visualType: ConfirmDialogWindow.DialogVisualType.Default,
+            subMessage: detailMessage);
 
-        if (result != MessageBoxResult.OK)
+        if (!confirmed)
         {
             return;
         }

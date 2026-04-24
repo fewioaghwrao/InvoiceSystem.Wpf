@@ -1,6 +1,5 @@
 ﻿using InvoiceSystem.Wpf.Services;
-using System;
-using System.Reflection;
+using InvoiceSystem.Wpf.ViewModels;
 using System.Windows;
 
 namespace InvoiceSystem.Wpf.Views;
@@ -15,8 +14,8 @@ public partial class MemberDashboardWindow : Window
     public MemberDashboardWindow(
         object? currentUser,
         AuthService authService,
-    InvoiceService invoiceService,
-    AccountService accountService)
+        InvoiceService invoiceService,
+        AccountService accountService)
     {
         InitializeComponent();
 
@@ -25,110 +24,60 @@ public partial class MemberDashboardWindow : Window
         _invoiceService = invoiceService;
         _accountService = accountService;
 
-        LoadCurrentUser();
+        DataContext = new MemberDashboardViewModel(
+            currentUser: _currentUser,
+            authService: _authService,
+            invoiceService: _invoiceService,
+            accountService: _accountService,
+            openInvoiceList: OpenInvoiceListWindow,
+            openPaymentStatus: OpenPaymentStatusWindow,
+            openProfile: OpenProfileWindow,
+            openLogin: OpenLoginWindow,
+            showConfirmDialog: ShowConfirmDialog);
     }
 
-    private void LoadCurrentUser()
+    private void OpenInvoiceListWindow()
     {
-        var name = ReadProperty(_currentUser, "Name") ?? "会員ユーザー";
-        var email = ReadProperty(_currentUser, "Email") ?? "メールアドレス未設定";
-        var roleRaw = ReadProperty(_currentUser, "Role")
-                   ?? ReadProperty(_currentUser, "RoleName")
-                   ?? ReadProperty(_currentUser, "UserRole");
-
-        var roleLabel = ToRoleLabel(roleRaw);
-
-        NameText.Text = name;
-        EmailText.Text = email;
-        RoleText.Text = roleLabel;
-        RoleBadgeText.Text = roleLabel;
-        WelcomeText.Text = $"ようこそ、{name}さん";
-        SubWelcomeText.Text = $"{email} でログイン中";
-    }
-
-    private static string? ReadProperty(object? target, string propertyName)
-    {
-        if (target == null) return null;
-
-        var prop = target.GetType().GetProperty(
-            propertyName,
-            BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-        var value = prop?.GetValue(target);
-        return value?.ToString();
-    }
-
-    private static string ToRoleLabel(string? role)
-    {
-        if (string.IsNullOrWhiteSpace(role))
-            return "一般会員";
-
-        var normalized = role.Trim().ToUpperInvariant();
-
-        return normalized switch
-        {
-            "ADMIN" => "管理者",
-            "MEMBER" => "一般会員",
-            "USER" => "一般会員",
-            "2" => "一般会員",
-            "1" => "管理者",
-            "9" => "退会",
-            _ => role
-        };
-    }
-
-    private void InvoicesButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        var invoiceListWindow = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService, _accountService);
-        invoiceListWindow.Show();
-        Close();
-    }
-
-    private void UnpaidButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        var window = new MemberPaymentStatusWindow(_currentUser, _authService, _invoiceService,_accountService);
+        var window = new MemberInvoiceListWindow(_currentUser, _authService, _invoiceService, _accountService);
         window.Show();
         Close();
     }
 
-    private void ProfileButton_OnClick(object sender, RoutedEventArgs e)
+    private void OpenPaymentStatusWindow()
+    {
+        var window = new MemberPaymentStatusWindow(_currentUser, _authService, _invoiceService, _accountService);
+        window.Show();
+        Close();
+    }
+
+    private void OpenProfileWindow()
     {
         var window = new MemberProfileWindow(_currentUser, _authService, _invoiceService, _accountService);
         window.Show();
         Close();
     }
 
-    private void BackToLoginButton_OnClick(object sender, RoutedEventArgs e)
+    private void OpenLoginWindow()
     {
-        var result = MessageBox.Show(
-            "ログイン画面へ戻りますか？",
-            "確認",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-
-        if (result != MessageBoxResult.Yes)
-            return;
-
         var loginWindow = new LoginWindow();
         loginWindow.Show();
         Close();
     }
 
-    private void LogoutButton_OnClick(object sender, RoutedEventArgs e)
+    private bool ShowConfirmDialog(ConfirmDialogRequest request)
     {
-        var result = MessageBox.Show(
-            "ログアウトしますか？",
-            "ログアウト確認",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+        var dialog = new ConfirmDialogWindow(
+            title: request.Title,
+            message: request.Message,
+            confirmText: request.ConfirmText,
+            cancelText: request.CancelText,
+            visualType: request.VisualType,
+            subMessage: request.SubMessage)
+        {
+            Owner = this
+        };
 
-        if (result != MessageBoxResult.Yes)
-            return;
-
-        _authService.Logout();
-
-        var loginWindow = new LoginWindow();
-        loginWindow.Show();
-        Close();
+        var result = dialog.ShowDialog();
+        return result == true && dialog.IsConfirmed;
     }
 }

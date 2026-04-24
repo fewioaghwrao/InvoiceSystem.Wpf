@@ -183,7 +183,7 @@
                             Padding="34">
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled">
-                            <Grid>
+                            <Grid Cursor="">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="14"/>
@@ -199,6 +199,8 @@
                                     <RowDefinition Height="16"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="16"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="Auto"/>
@@ -430,13 +432,39 @@
 
                                 <!-- 補足 -->
                                 <TextBlock Grid.Row="14"
-                                           Foreground="#64748B"
-                                           FontSize="11"
-                                           TextWrapping="Wrap"
-                                           Text="登録後はログイン画面からサインインしてください。"/>
+           Foreground="#64748B"
+           FontSize="11"
+           TextWrapping="Wrap"
+           Text="登録後はログイン画面からサインインしてください。"/>
 
-                                <!-- ボタン -->
-                                <Grid Grid.Row="16">
+                                <StackPanel Grid.Row="16"
+            Orientation="Horizontal"
+            HorizontalAlignment="Left">
+                                    <Button Content="利用規約"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#7DD3FC"
+            FontSize="11"
+            FontWeight="SemiBold"
+            Cursor="Hand"
+            Click="OpenTermsButton_OnClick"/>
+
+                                    <TextBlock Text=" / "
+               Foreground="#64748B"
+               FontSize="11"
+               VerticalAlignment="Center"/>
+
+                                    <Button Content="プライバシーポリシー"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#7DD3FC"
+            FontSize="11"
+            FontWeight="SemiBold"
+            Cursor="Hand"
+            Click="OpenPrivacyPolicyButton_OnClick"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="18">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="12"/>
@@ -444,24 +472,24 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Button Grid.Column="0"
-                                            Height="46"
-                                            Content="アカウントを作成する"
-                                            Command="{Binding RegisterCommand}"
-                                            Background="#0EA5E9"
-                                            Foreground="White"
-                                            BorderThickness="0"
-                                            FontWeight="SemiBold"
-                                            FontSize="14"/>
+            Height="46"
+            Content="アカウントを作成する"
+            Command="{Binding RegisterCommand}"
+            Background="#0EA5E9"
+            Foreground="White"
+            BorderThickness="0"
+            FontWeight="SemiBold"
+            FontSize="14"/>
 
                                     <Button Grid.Column="2"
-                                            Height="46"
-                                            Content="閉じる"
-                                            Click="CloseButton_OnClick"
-                                            Background="Transparent"
-                                            Foreground="#CBD5E1"
-                                            BorderBrush="#475569"
-                                            BorderThickness="1"
-                                            FontWeight="SemiBold"/>
+            Height="46"
+            Content="閉じる"
+            Click="CloseButton_OnClick"
+            Background="Transparent"
+            Foreground="#CBD5E1"
+            BorderBrush="#475569"
+            BorderThickness="1"
+            FontWeight="SemiBold"/>
                                 </Grid>
                             </Grid>
                         </ScrollViewer>

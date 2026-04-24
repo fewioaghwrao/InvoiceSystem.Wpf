@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceSystem.Wpf.Services;
 
-public class InvoiceService
+public class InvoiceService : IInvoiceService
 {
     private readonly HttpClient _httpClient;
 
