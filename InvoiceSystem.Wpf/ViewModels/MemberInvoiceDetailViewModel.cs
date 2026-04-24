@@ -187,12 +187,6 @@ public sealed class MemberInvoiceDetailViewModel : ViewModelBase
             ErrorMessage = ex.Message;
             IsPdfEnabled = false;
             RaiseCommandStates();
-
-            MessageBox.Show(
-                $"請求書詳細の取得に失敗しました。\n\n{ex.Message}",
-                "エラー",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
         }
         finally
         {

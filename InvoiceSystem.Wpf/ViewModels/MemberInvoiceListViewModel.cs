@@ -293,7 +293,6 @@ public sealed class MemberInvoiceListViewModel : ViewModelBase
             ToggleLoading(false);
         }
     }
-
     private async Task LoadInvoicesAsync(bool resetPage)
     {
         try
@@ -319,18 +318,12 @@ public sealed class MemberInvoiceListViewModel : ViewModelBase
 
             BindResult(result);
         }
-        catch (Exception ex)
+        catch
         {
             InvoiceRows.Clear();
             SummaryText = "0 件";
             PageInfoText = "1 / 1";
             IsOverdueBannerVisible = false;
-
-            MessageBox.Show(
-                $"請求書一覧の取得に失敗しました。\n\n{ex.Message}",
-                "エラー",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
         }
         finally
         {
