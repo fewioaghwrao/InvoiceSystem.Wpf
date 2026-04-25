@@ -170,22 +170,33 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center">
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center">
                         <TextBlock HorizontalAlignment="Right"
-                                   Foreground="#7DD3FC"
-                                   FontSize="12"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding LoadingMessage}"
-                                   Visibility="{Binding LoadingVisibility}"/>
+               Foreground="#7DD3FC"
+               FontSize="12"
+               FontWeight="SemiBold"
+               Text="{Binding LoadingMessage}"
+               Visibility="{Binding LoadingVisibility}"/>
 
                         <TextBlock Margin="0,10,0,0"
-                                   HorizontalAlignment="Right"
-                                   Foreground="#FDA4AF"
-                                   FontSize="12"
-                                   TextWrapping="Wrap"
-                                   Width="320"
-                                   Text="{Binding ErrorMessage}"/>
+               HorizontalAlignment="Right"
+               Foreground="#86EFAC"
+               FontSize="12"
+               FontWeight="SemiBold"
+               TextWrapping="Wrap"
+               Width="320"
+               Text="{Binding InfoMessage}"
+               Visibility="{Binding InfoMessageVisibility}"/>
+
+                        <TextBlock Margin="0,10,0,0"
+               HorizontalAlignment="Right"
+               Foreground="#FDA4AF"
+               FontSize="12"
+               TextWrapping="Wrap"
+               Width="320"
+               Text="{Binding ErrorMessage}"
+               Visibility="{Binding ErrorMessageVisibility}"/>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -27,4 +27,12 @@ public interface IInvoiceService
     string q,
     int page,
     int pageSize = 10);
+
+    Task<AccountInvoiceListDto> GetMemberInvoicesWithBalanceAsync(
+    int year,
+    string month,
+    string status,
+    string q,
+    int page,
+    int pageSize = 50);
 }

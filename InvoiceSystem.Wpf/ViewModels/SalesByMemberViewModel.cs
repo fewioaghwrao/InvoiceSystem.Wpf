@@ -12,11 +12,11 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class SalesByMemberViewModel : INotifyPropertyChanged
 {
-    private readonly SalesService _salesService;
+    private readonly ISalesService _salesService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public SalesByMemberViewModel(SalesService salesService)
+    public SalesByMemberViewModel(ISalesService salesService)
     {
         _salesService = salesService;
 

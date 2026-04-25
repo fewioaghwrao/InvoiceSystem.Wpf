@@ -13,7 +13,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class PaymentCreateViewModel : INotifyPropertyChanged
 {
-    private readonly PaymentService _paymentService;
+    private readonly IPaymentService _paymentService;
 
     private bool _isLoading;
     private bool _isSaving;
@@ -27,7 +27,7 @@ public class PaymentCreateViewModel : INotifyPropertyChanged
     private string _amountText = string.Empty;
     private PaymentMethodOption? _selectedMethod;
 
-    public PaymentCreateViewModel(PaymentService paymentService)
+    public PaymentCreateViewModel(IPaymentService paymentService)
     {
         _paymentService = paymentService;
 

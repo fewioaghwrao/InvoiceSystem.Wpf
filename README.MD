@@ -405,8 +405,60 @@ API ベース URL は `appsettings.json` で管理しています。
 
 ## テスト
 
-GitHub Actions により、.NET 8 / Windows 環境でビルドとテストを自動実行できるようにしています。  
-テストコードは xUnit を利用しており、テスト結果は `.trx` として保存する想定です。
+本リポジトリでは、WPF クライアントの主要な ViewModel に対して xUnit による単体テストを追加しています。
+
+UI そのものではなく、画面状態・入力値・検索条件・ページング・集計値・バリデーション・Service 呼び出し内容を中心にテストしています。  
+外部 API への依存を避けるため、`IAuthService` / `IAccountService` / `IMemberService` / `IInvoiceService` / `IPaymentService` / `ISalesService` などの interface を用意し、テストでは Fake Service を差し込む構成にしています。
+
+### テスト対象
+
+| 分類 | テスト対象 |
+|------|------------|
+| 認証 | `LoginViewModel`, `RegisterViewModel` |
+| 会員画面 | `MemberDashboardViewModel`, `MemberProfileViewModel`, `MemberInvoiceListViewModel`, `MemberInvoiceDetailViewModel`, `MemberPaymentStatusViewModel` |
+| 会員管理 | `MemberListViewModel`, `MemberDetailViewModel` |
+| 請求管理 | `InvoiceListViewModel`, `AdminInvoiceDetailViewModel`, `AdminInvoiceEditViewModel` |
+| 入金管理 | `PaymentListViewModel`, `PaymentCreateViewModel`, `PaymentDetailViewModel` |
+| 売上管理 | `SalesListViewModel`, `SalesByMemberViewModel` |
+| 管理者画面 | `AdminDashboardViewModel`, `AdminCollectionViewModel` |
+
+### 主なテスト観点
+
+- 初期表示時のプロパティ設定
+- 検索条件・ページング条件の組み立て
+- API 取得結果の ViewModel / 表示用プロパティへの反映
+- 金額・日付・ステータス表示の変換
+- 入力バリデーション
+- 保存・更新・登録時の Request DTO 組み立て
+- エラー発生時の `HasError` / `ErrorMessage` 設定
+- 画面遷移用 Action / Command の呼び出し
+- ダイアログ依存箇所の Fake 化
+
+### テスト例
+
+- ログイン成功時に `CurrentUser` が設定され、`LoginSucceeded` が発火すること
+- 会員プロフィール保存時に入力値が trim され、任意項目の空白が null 扱いになること
+- 請求書作成・編集時に明細行の追加、削除、並び替え、合計金額が正しく反映されること
+- 入金登録時に会員選択、入金額、入金方法をもとに `CreatePaymentRequestDto` が作成されること
+- 入金詳細画面で割当行の追加、削除、請求書候補の適用、重複・超過チェックが行われること
+- 売上一覧・顧客別売上集計で、検索条件・集計値・ページング表示が正しく反映されること
+- 催促画面で請求情報、催促履歴、文面プレビュー、次回対応日が正しく表示されること
+
+### 実行方法
+
+```bash
+dotnet test
+```
+
+または、ソリューションファイルを指定して実行します。
+
+```bash
+dotnet test InvoiceSystem.Wpf.sln
+```
+### CI
+
+GitHub Actions により、Windows 環境でビルドとテストを自動実行します。
+テスト結果は `.trx` として保存する想定です。
 
 ---
 
@@ -415,7 +467,8 @@ GitHub Actions により、.NET 8 / Windows 環境でビルドとテストを自
 - 共通スタイルの整理強化
 - 入力バリデーション改善
 - エラーハンドリング強化
-- テストコード拡充
+- テスト対象の継続拡充
+- Service / Dialog / File 出力まわりの抽象化強化
 - 画面ごとの責務分離のさらなる明確化
 - UI コンポーネントの再利用性向上
 

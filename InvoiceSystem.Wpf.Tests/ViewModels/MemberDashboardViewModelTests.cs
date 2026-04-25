@@ -381,6 +381,11 @@ public class MemberDashboardViewModelTests
         {
             LogoutCallCount++;
         }
+
+        public Task<(bool Success, string Message)> RegisterAsync(RegisterRequest request)
+        {
+            return Task.FromResult((true, "登録成功"));
+        }
     }
 
     private sealed class StubHttpMessageHandler : HttpMessageHandler

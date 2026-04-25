@@ -12,7 +12,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public sealed class MemberProfileViewModel : ViewModelBase
 {
-    private readonly AccountService _accountService;
+    private readonly IAccountService _accountService;
     private readonly Action _openDashboard;
     private readonly Action _openLogin;
     private readonly Func<ConfirmDialogRequest, bool> _showConfirmDialog;
@@ -44,8 +44,39 @@ public sealed class MemberProfileViewModel : ViewModelBase
     public string ErrorMessage
     {
         get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
+        set
+        {
+            if (SetProperty(ref _errorMessage, value))
+            {
+                RaisePropertyChanged(nameof(HasError));
+                RaisePropertyChanged(nameof(ErrorMessageVisibility));
+            }
+        }
     }
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+
+    public Visibility ErrorMessageVisibility =>
+        HasError ? Visibility.Visible : Visibility.Collapsed;
+
+    private string _infoMessage = string.Empty;
+    public string InfoMessage
+    {
+        get => _infoMessage;
+        set
+        {
+            if (SetProperty(ref _infoMessage, value))
+            {
+                RaisePropertyChanged(nameof(HasInfo));
+                RaisePropertyChanged(nameof(InfoMessageVisibility));
+            }
+        }
+    }
+
+    public bool HasInfo => !string.IsNullOrWhiteSpace(InfoMessage);
+
+    public Visibility InfoMessageVisibility =>
+        HasInfo ? Visibility.Visible : Visibility.Collapsed;
 
     private string _name = string.Empty;
     public string Name
@@ -107,7 +138,7 @@ public sealed class MemberProfileViewModel : ViewModelBase
     public ICommand BackCommand { get; }
 
     public MemberProfileViewModel(
-        AccountService accountService,
+        IAccountService accountService,
         Action openDashboard,
         Action openLogin,
         Func<ConfirmDialogRequest, bool> showConfirmDialog)
@@ -132,7 +163,7 @@ public sealed class MemberProfileViewModel : ViewModelBase
         try
         {
             ToggleLoading(true, "処理中...");
-            ErrorMessage = string.Empty;
+            ClearMessages();
 
             var profile = await _accountService.GetMyProfileAsync();
             _profile = profile;
@@ -146,13 +177,8 @@ public sealed class MemberProfileViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            ErrorMessage = ex.Message;
-
-            MessageBox.Show(
-                $"プロフィールの取得に失敗しました。\n\n{ex.Message}",
-                "エラー",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            InfoMessage = string.Empty;
+            ErrorMessage = $"プロフィールの取得に失敗しました。{Environment.NewLine}{ex.Message}";
         }
         finally
         {
@@ -208,7 +234,7 @@ public sealed class MemberProfileViewModel : ViewModelBase
         var profile = BuildProfileFromForm();
         var issues = Validate(profile);
 
-        ErrorMessage = string.Empty;
+        ClearMessages();
 
         if (issues.Length > 0)
         {
@@ -258,21 +284,13 @@ public sealed class MemberProfileViewModel : ViewModelBase
             RaisePropertyChanged(nameof(EmailChangedText));
             RaisePropertyChanged(nameof(EmailChangedNoticeVisibility));
 
-            MessageBox.Show(
-                "プロフィールを保存しました。",
-                "保存完了",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            ErrorMessage = string.Empty;
+            InfoMessage = "プロフィールを保存しました。";
         }
         catch (Exception ex)
         {
-            ErrorMessage = ex.Message;
-
-            MessageBox.Show(
-                $"プロフィールの保存に失敗しました。\n\n{ex.Message}",
-                "保存エラー",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            InfoMessage = string.Empty;
+            ErrorMessage = $"プロフィールの保存に失敗しました。{Environment.NewLine}{ex.Message}";
         }
         finally
         {
@@ -282,6 +300,8 @@ public sealed class MemberProfileViewModel : ViewModelBase
 
     private async Task WithdrawAsync()
     {
+        ClearMessages();
+
         var confirmed = _showConfirmDialog(new ConfirmDialogRequest
         {
             Title = "退会確認",
@@ -301,23 +321,15 @@ public sealed class MemberProfileViewModel : ViewModelBase
 
             await _accountService.DeleteMyAccountAsync();
 
-            MessageBox.Show(
-                "退会処理が完了しました。",
-                "退会完了",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            ErrorMessage = string.Empty;
+            InfoMessage = "退会処理が完了しました。";
 
             _openLogin();
         }
         catch (Exception ex)
         {
-            ErrorMessage = ex.Message;
-
-            MessageBox.Show(
-                $"退会処理に失敗しました。\n\n{ex.Message}",
-                "退会エラー",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
+            InfoMessage = string.Empty;
+            ErrorMessage = $"退会処理に失敗しました。{Environment.NewLine}{ex.Message}";
         }
         finally
         {
@@ -333,6 +345,12 @@ public sealed class MemberProfileViewModel : ViewModelBase
     private void ToggleLoading(bool isLoading, string message = "")
     {
         LoadingMessage = isLoading ? message : string.Empty;
+    }
+
+    private void ClearMessages()
+    {
+        ErrorMessage = string.Empty;
+        InfoMessage = string.Empty;
     }
 
     private void RaiseCommandStates()

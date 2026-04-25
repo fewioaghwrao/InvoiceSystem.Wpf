@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceSystem.Wpf.Services;
 
-public class PaymentService
+public class PaymentService : IPaymentService
 {
     private readonly HttpClient _httpClient;
 

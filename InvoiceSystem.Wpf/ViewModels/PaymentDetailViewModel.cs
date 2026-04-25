@@ -13,8 +13,8 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class PaymentDetailViewModel : INotifyPropertyChanged
 {
-    private readonly PaymentService _paymentService;
-    private readonly InvoiceService _invoiceService;
+    private readonly IPaymentService _paymentService;
+    private readonly IInvoiceService _invoiceService;
     private readonly long _paymentId;
 
     private bool _isLoading;
@@ -39,8 +39,8 @@ public class PaymentDetailViewModel : INotifyPropertyChanged
 
     public PaymentDetailViewModel(
         long paymentId,
-        PaymentService paymentService,
-        InvoiceService invoiceService)
+        IPaymentService paymentService,
+        IInvoiceService invoiceService)
     {
         _paymentId = paymentId;
         _paymentService = paymentService;

@@ -9,7 +9,7 @@ using InvoiceSystem.Wpf.Models;
 
 namespace InvoiceSystem.Wpf.Services;
 
-public class AccountService
+public class AccountService : IAccountService
 {
     private readonly HttpClient _httpClient;
 
