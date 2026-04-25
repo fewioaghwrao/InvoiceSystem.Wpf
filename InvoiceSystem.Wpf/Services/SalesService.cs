@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceSystem.Wpf.Services;
 
-public class SalesService
+public class SalesService : ISalesService
 {
     private readonly HttpClient _httpClient;
 

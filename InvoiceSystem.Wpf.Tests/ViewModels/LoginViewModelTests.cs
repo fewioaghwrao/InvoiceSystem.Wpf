@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using InvoiceSystem.Wpf.Models;
+﻿using InvoiceSystem.Wpf.Models;
+using InvoiceSystem.Wpf.Services;
 using InvoiceSystem.Wpf.Tests.Fakes;
 using InvoiceSystem.Wpf.ViewModels;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace InvoiceSystem.Wpf.Tests.ViewModels;
@@ -139,22 +140,30 @@ public sealed class LoginViewModelTests
         Assert.True(vm.LoginCommand.CanExecute(null));
     }
 
-    private sealed class DelayedFakeAuthService : InvoiceSystem.Wpf.Services.IAuthService
+    private sealed class DelayedFakeAuthService : IAuthService
     {
         private readonly TaskCompletionSource<LoginResponse> _tcs = new();
 
+        public LoginRequest? LastRequest { get; private set; }
+
         public Task<LoginResponse> LoginAsync(LoginRequest request)
         {
+            LastRequest = request;
             return _tcs.Task;
+        }
+
+        public void Complete(LoginResponse response)
+        {
+            _tcs.SetResult(response);
         }
 
         public void Logout()
         {
         }
 
-        public void Complete(LoginResponse response)
+        public Task<(bool Success, string Message)> RegisterAsync(RegisterRequest request)
         {
-            _tcs.TrySetResult(response);
+            return Task.FromResult((true, "登録成功"));
         }
     }
 }

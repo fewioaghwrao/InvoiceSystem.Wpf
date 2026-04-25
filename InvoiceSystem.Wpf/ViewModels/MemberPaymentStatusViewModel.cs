@@ -16,7 +16,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 public sealed class MemberPaymentStatusViewModel : ViewModelBase
 {
     private readonly object? _currentUser;
-    private readonly InvoiceService _invoiceService;
+    private readonly IInvoiceService _invoiceService;
     private readonly Action<long> _openDetail;
     private readonly Action _openDashboard;
 
@@ -108,7 +108,7 @@ public sealed class MemberPaymentStatusViewModel : ViewModelBase
 
     public MemberPaymentStatusViewModel(
         object? currentUser,
-        InvoiceService invoiceService,
+        IInvoiceService invoiceService,
         Action<long> openDetail,
         Action openDashboard)
     {

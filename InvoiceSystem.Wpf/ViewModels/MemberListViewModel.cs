@@ -15,11 +15,11 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class MemberListViewModel : INotifyPropertyChanged
 {
-    private readonly MemberService _memberService;
+    private readonly IMemberService _memberService;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public MemberListViewModel(MemberService memberService)
+    public MemberListViewModel(IMemberService memberService)
     {
         _memberService = memberService;
 

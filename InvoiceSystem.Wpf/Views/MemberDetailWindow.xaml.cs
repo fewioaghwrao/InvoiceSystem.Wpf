@@ -6,13 +6,20 @@ namespace InvoiceSystem.Wpf.Views;
 
 public partial class MemberDetailWindow : Window
 {
+    private readonly IMemberService _memberService;
     private readonly MemberDetailViewModel _viewModel;
 
-    public MemberDetailWindow(MemberService memberService, int memberId)
+    public MemberDetailWindow(IMemberService memberService, int memberId)
     {
         InitializeComponent();
 
-        _viewModel = new MemberDetailViewModel(memberService, memberId, this);
+        _memberService = memberService;
+
+        _viewModel = new MemberDetailViewModel(
+            memberService,
+            memberId,
+            this);
+
         DataContext = _viewModel;
 
         Loaded += MemberDetailWindow_Loaded;

@@ -10,7 +10,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class RegisterViewModel : INotifyPropertyChanged
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
     private string _name = string.Empty;
     private string _email = string.Empty;
@@ -27,7 +27,7 @@ public class RegisterViewModel : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
     public event Action? RegisterSucceeded;
 
-    public RegisterViewModel(AuthService authService)
+    public RegisterViewModel(IAuthService authService)
     {
         _authService = authService;
         RegisterCommand = new AsyncRelayCommand(RegisterAsync, () => !IsLoading);
@@ -107,7 +107,7 @@ public class RegisterViewModel : INotifyPropertyChanged
 
     public ICommand RegisterCommand { get; }
 
-    private async Task RegisterAsync()
+    public async Task RegisterAsync()
     {
         HasError = false;
         ErrorMessage = string.Empty;

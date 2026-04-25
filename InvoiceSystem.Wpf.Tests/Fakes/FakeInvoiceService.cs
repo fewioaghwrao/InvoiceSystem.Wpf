@@ -251,4 +251,57 @@ public sealed class FakeInvoiceService : IInvoiceService
 
         return Task.FromResult(MemberInvoicesToReturn ?? new AccountInvoiceListDto());
     }
+
+    // =========================
+    // MemberPaymentStatusViewModel 用
+    // =========================
+    public AccountInvoiceListDto? MemberInvoicesWithBalanceToReturnForUnpaid { get; set; }
+    public AccountInvoiceListDto? MemberInvoicesWithBalanceToReturnForPartial { get; set; }
+    public Exception? ExceptionToThrowOnGetMemberInvoicesWithBalance { get; set; }
+
+    public List<string> GetMemberInvoicesWithBalanceStatuses { get; } = new();
+
+    public int LastMemberInvoicesWithBalanceYear { get; private set; }
+    public string? LastMemberInvoicesWithBalanceMonth { get; private set; }
+    public string? LastMemberInvoicesWithBalanceKeyword { get; private set; }
+    public int LastMemberInvoicesWithBalancePage { get; private set; }
+    public int LastMemberInvoicesWithBalancePageSize { get; private set; }
+
+    public Task<AccountInvoiceListDto> GetMemberInvoicesWithBalanceAsync(
+        int year,
+        string month,
+        string status,
+        string q,
+        int page,
+        int pageSize = 50)
+    {
+        LastMemberInvoicesWithBalanceYear = year;
+        LastMemberInvoicesWithBalanceMonth = month;
+        LastMemberInvoicesWithBalanceKeyword = q;
+        LastMemberInvoicesWithBalancePage = page;
+        LastMemberInvoicesWithBalancePageSize = pageSize;
+        GetMemberInvoicesWithBalanceStatuses.Add(status);
+
+        if (ExceptionToThrowOnGetMemberInvoicesWithBalance != null)
+        {
+            return Task.FromException<AccountInvoiceListDto>(
+                ExceptionToThrowOnGetMemberInvoicesWithBalance);
+        }
+
+        if (status == "unpaid")
+        {
+            return Task.FromResult(
+                MemberInvoicesWithBalanceToReturnForUnpaid
+                ?? new AccountInvoiceListDto());
+        }
+
+        if (status == "partial")
+        {
+            return Task.FromResult(
+                MemberInvoicesWithBalanceToReturnForPartial
+                ?? new AccountInvoiceListDto());
+        }
+
+        return Task.FromResult(new AccountInvoiceListDto());
+    }
 }

@@ -13,7 +13,7 @@ namespace InvoiceSystem.Wpf.ViewModels;
 
 public class PaymentListViewModel : INotifyPropertyChanged
 {
-    private readonly PaymentService _paymentService;
+    private readonly IPaymentService _paymentService;
 
     private bool _isLoading;
     private bool _hasError;
@@ -27,7 +27,7 @@ public class PaymentListViewModel : INotifyPropertyChanged
     private int _totalCount;
     private PaymentListItemDto? _selectedPayment;
 
-    public PaymentListViewModel(PaymentService paymentService)
+    public PaymentListViewModel(IPaymentService paymentService)
     {
         _paymentService = paymentService;
 
